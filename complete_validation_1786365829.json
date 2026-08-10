@@ -1,0 +1,20 @@
+{
+  "timestamp": 1786365829.2022226,
+  "prompt": "What is open knowledge format(OKF)",
+  "gateway_used": true,
+  "gateway_latency_ms": 6409.205951000331,
+  "spec_decode_metrics": {},
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

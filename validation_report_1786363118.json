@@ -1,0 +1,43 @@
+{
+  "timestamp": 1786363118.140036,
+  "prompt": "Write a Python function to reverse a linked list",
+  "intent": "coding \u2192 tier3 (7B reasoning) likely",
+  "inference_results": [
+    {
+      "prompt": "Write a Python function to reverse a linked list",
+      "tier_used": "tier2_target",
+      "model_name": "xLAM-2-3B-fc-r-Q4_0.gguf",
+      "text": "[{\"name\": \"reverse_linked_list\", \"arguments\": {\"head\": {\"data\": 1, \"next\": {\"data\": 2, \"next\": {\"data\": 3, \"next\": {\"data\": 4, \"next\": {\"data\": 5, \"next\": None}}}}}}",
+      "prompt_tokens": 182,
+      "completion_tokens": 64,
+      "total_tokens": 246,
+      "latency_ms": 3107.8040749998763,
+      "tok_per_s": 20.59
+    },
+    {
+      "prompt": "Write a Python function to reverse a linked list",
+      "tier_used": "tier_spec",
+      "model_name": "xLAM-2-3B + 1B draft",
+      "text": "[{\"name\": \"None\", \"arguments\": {}}]",
+      "prompt_tokens": 182,
+      "completion_tokens": 14,
+      "total_tokens": 196,
+      "latency_ms": 1528.0340400058776,
+      "tok_per_s": 9.16
+    }
+  ],
+  "draft_acceptance_logs": [],
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

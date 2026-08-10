@@ -1,0 +1,43 @@
+{
+  "timestamp": 1786363126.8429453,
+  "prompt": "What are the ethical implications of artificial general intelligence?",
+  "intent": "short_query \u2192 tier2 (3B) with spec decode",
+  "inference_results": [
+    {
+      "prompt": "What are the ethical implications of artificial general intelligence?",
+      "tier_used": "tier2_target",
+      "model_name": "xLAM-2-3B-fc-r-Q4_0.gguf",
+      "text": "The provided tools do not include any functionality to analyze or discuss the ethical implications of artificial general intelligence, as the tools are focused on specific tasks such as data processing, machine learning, and natural language processing, without a general-purpose ethical analysis function.",
+      "prompt_tokens": 183,
+      "completion_tokens": 50,
+      "total_tokens": 233,
+      "latency_ms": 2482.5283409882104,
+      "tok_per_s": 20.14
+    },
+    {
+      "prompt": "What are the ethical implications of artificial general intelligence?",
+      "tier_used": "tier_spec",
+      "model_name": "xLAM-2-3B + 1B draft",
+      "text": "The provided tools do not include any functionality to analyze or discuss ethical implications of artificial general intelligence, as they are primarily focused on tasks such as data processing, machine learning, and natural language generation, without any specific capabilities for ethical analysis or discussion.",
+      "prompt_tokens": 183,
+      "completion_tokens": 50,
+      "total_tokens": 233,
+      "latency_ms": 6144.473038992146,
+      "tok_per_s": 8.14
+    }
+  ],
+  "draft_acceptance_logs": [],
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "status": "ok",
+  "spec": {
+    "label": "tier-spec-draft-simple",
+    "url": "http://localhost:8084",
+    "prompts": 3,
+    "rounds": 3,
+    "completion_tokens": 186,
+    "total_seconds": 27.402,
+    "tok_per_s": 7.732,
+    "tok_per_s_rounds": [
+      5.435,
+      7.732,
+      7.772
+    ],
+    "latency_ms_mean": 3044.67
+  },
+  "baseline": {
+    "label": "tier2-no-spec",
+    "url": "http://localhost:8082",
+    "prompts": 3,
+    "rounds": 3,
+    "completion_tokens": 209,
+    "total_seconds": 12.5654,
+    "tok_per_s": 19.395,
+    "tok_per_s_rounds": [
+      12.086,
+      19.395,
+      20.054
+    ],
+    "latency_ms_mean": 1396.15
+  },
+  "measured_speedup": 0.399,
+  "note": "Compare tier-spec (in-process draft-simple) vs standalone target server. measured_speedup < 1.3\u00d7 \u2014 draft and target may share the same GGUF; a real smaller draft GGUF would push speedup higher."
+}

@@ -608,7 +608,25 @@ class LlamaCppBackend(InferenceBackend):
     async def generate(
         self, req: GenerateRequest, ctx: ExecutionContext
     ) -> GenerateResult:
-        slot_reused = False  # FIX: prevent NameError
+        slot_reused = False
+        extra, slot_meta = _llama_chat_extra(
+            session_id=req.session_id,
+            messages=req.messages,
+            slot_router=self._slot_router,
+            tokenize_fn=self.tokenize,
+            okf_block_hashes=_okf_hashes_from_request(req),
+            cache_prompt_tokens=list(getattr(req, "cache_prompt_tokens", None) or []),
+            response_format=_json_response_format(req, tier=self.tier),
+        )
+        extra, slot_meta = _llama_chat_extra(
+            session_id=req.session_id,
+            messages=req.messages,
+            slot_router=self._slot_router,
+            tokenize_fn=self.tokenize,
+            okf_block_hashes=_okf_hashes_from_request(req),
+            cache_prompt_tokens=list(getattr(req, "cache_prompt_tokens", None) or []),
+            response_format=_json_response_format(req, tier=self.tier),
+        )  # FIX: prevent NameError
         t0 = time.perf_counter()
         # Prepare telemetry attributes for this generation request
         span_attrs = {
@@ -705,7 +723,7 @@ class LlamaCppBackend(InferenceBackend):
             )
             snap = self._slot_router.metrics.snapshot()
             metrics["radix_prefix_hit_total"] = float(snap["radix_prefix_hit_total"])
-            if slot_meta.get("radix_match_len"):
+            if slot_meta and slot_meta.get("radix_match_len"):
                 metrics["radix_match_len"] = float(slot_meta["radix_match_len"])
         if tel:
             tel.event(
