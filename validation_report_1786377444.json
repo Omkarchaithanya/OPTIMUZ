@@ -1,0 +1,54 @@
+{
+  "timestamp": 1786377444.694059,
+  "prompt": "Calculate 15 + 27 using the calculator tool",
+  "intent": "tool_calling \u2192 tier2 (3B) + tool speculation",
+  "inference_results": [
+    {
+      "prompt": "Calculate 15 + 27 using the calculator tool",
+      "tier_used": "tier2_target",
+      "model_name": "xLAM-2-3B-fc-r-Q4_0.gguf",
+      "text": "[{\"name\": \"calculate\", \"arguments\": {\"operation\": \"addition\", \"numbers\": [15, 27]}}]",
+      "prompt_tokens": 185,
+      "completion_tokens": 31,
+      "total_tokens": 216,
+      "latency_ms": 1558.8067520002369,
+      "tok_per_s": 19.89
+    },
+    {
+      "prompt": "Calculate 15 + 27 using the calculator tool",
+      "tier_used": "tier_spec",
+      "model_name": "xLAM-2-3B + 1B draft",
+      "text": "[{\"name\": \"calculate\", \"arguments\": {\"expression\": \"15 + 27\"}}]",
+      "prompt_tokens": 185,
+      "completion_tokens": 23,
+      "total_tokens": 208,
+      "latency_ms": 2123.6990850011352,
+      "tok_per_s": 10.83
+    },
+    {
+      "prompt": "Calculate 15 + 27 using the calculator tool",
+      "tier_used": "gateway",
+      "model_name": "Cascade Router",
+      "text": "[{\"name\": \"calculate\", \"arguments\": {\"operation\": \"addition\", \"numbers\": [15, 27]}}]",
+      "prompt_tokens": 8,
+      "completion_tokens": 8,
+      "total_tokens": 16,
+      "latency_ms": 4664.50506199908,
+      "tok_per_s": 1.72
+    }
+  ],
+  "draft_acceptance_logs": [],
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

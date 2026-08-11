@@ -1,0 +1,54 @@
+{
+  "timestamp": 1786377404.417321,
+  "prompt": "Explain quantum computing in simple terms",
+  "intent": "general \u2192 tier2 (3B) with spec decode",
+  "inference_results": [
+    {
+      "prompt": "Explain quantum computing in simple terms",
+      "tier_used": "tier2_target",
+      "model_name": "xLAM-2-3B-fc-r-Q4_0.gguf",
+      "text": "Quantum computing is a type of computing that uses quantum-mechanical phenomena, such as superposition and entanglement, to perform operations on data. In simple terms, it is a way of processing information using quantum bits, or qubits, which can exist in multiple states at once, allowing for faster and more",
+      "prompt_tokens": 180,
+      "completion_tokens": 64,
+      "total_tokens": 244,
+      "latency_ms": 4907.113615001435,
+      "tok_per_s": 13.04
+    },
+    {
+      "prompt": "Explain quantum computing in simple terms",
+      "tier_used": "tier_spec",
+      "model_name": "xLAM-2-3B + 1B draft",
+      "text": "Quantum computing is a type of computing that uses quantum bits, or qubits, which can exist in multiple states simultaneously. This allows quantum computers to process a vast amount of information at once, making them much faster and more powerful than classical computers for certain tasks.",
+      "prompt_tokens": 180,
+      "completion_tokens": 54,
+      "total_tokens": 234,
+      "latency_ms": 7178.081799997017,
+      "tok_per_s": 7.52
+    },
+    {
+      "prompt": "Explain quantum computing in simple terms",
+      "tier_used": "gateway",
+      "model_name": "Cascade Router",
+      "text": "Quantum computing is a type of computing that uses quantum bits, or qubits, which can exist in multiple states at once, unlike classical bits that can only be in one state at a time. This allows quantum computers to perform certain tasks much faster than classical computers.",
+      "prompt_tokens": 6,
+      "completion_tokens": 47,
+      "total_tokens": 53,
+      "latency_ms": 6504.26183998934,
+      "tok_per_s": 7.23
+    }
+  ],
+  "draft_acceptance_logs": [],
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

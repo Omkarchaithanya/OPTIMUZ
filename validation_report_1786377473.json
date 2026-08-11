@@ -1,0 +1,54 @@
+{
+  "timestamp": 1786377473.6225026,
+  "prompt": "What are the ethical implications of artificial general intelligence?",
+  "intent": "short_query \u2192 tier2 (3B) with spec decode",
+  "inference_results": [
+    {
+      "prompt": "What are the ethical implications of artificial general intelligence?",
+      "tier_used": "tier2_target",
+      "model_name": "xLAM-2-3B-fc-r-Q4_0.gguf",
+      "text": "The provided tools do not include any functionality to analyze or discuss ethical implications of artificial general intelligence, as the tools are designed for tasks such as data processing, machine learning, and natural language generation, but do not provide capabilities for ethical analysis or discussion.",
+      "prompt_tokens": 183,
+      "completion_tokens": 51,
+      "total_tokens": 234,
+      "latency_ms": 2471.776926002349,
+      "tok_per_s": 20.63
+    },
+    {
+      "prompt": "What are the ethical implications of artificial general intelligence?",
+      "tier_used": "tier_spec",
+      "model_name": "xLAM-2-3B + 1B draft",
+      "text": "The provided tools do not include any functionality to analyze or discuss the ethical implications of artificial general intelligence, as the tools are not designed for such tasks and do not provide any capabilities related to ethical considerations or discussions.",
+      "prompt_tokens": 183,
+      "completion_tokens": 43,
+      "total_tokens": 226,
+      "latency_ms": 6365.270561000216,
+      "tok_per_s": 6.76
+    },
+    {
+      "prompt": "What are the ethical implications of artificial general intelligence?",
+      "tier_used": "gateway",
+      "model_name": "Cascade Router",
+      "text": "The ethical implications of artificial general intelligence are complex and multifaceted. AGI, or artificial general intelligence, refers to a hypothetical machine that possesses the ability to understand and perform any intellectual task that a human being can. The development of AGI raises concerns about the potential loss of jobs, the potential for misuse of the technology, and the potential for AGI to make decisions that are not aligned with human values. Additionally, there are concerns about the potential for AGI to become a threat to human safety, as well as the potential for AGI to be used in ways that are unethical or harmful.",
+      "prompt_tokens": 9,
+      "completion_tokens": 104,
+      "total_tokens": 113,
+      "latency_ms": 5733.865546993911,
+      "tok_per_s": 18.14
+    }
+  ],
+  "draft_acceptance_logs": [],
+  "tool_spec_summary": {
+    "hit_rate": 0.5,
+    "avg_time_saved_ms": 33.253,
+    "p50": 49.805,
+    "p95": 50.004,
+    "tokens_per_dollar_delta": 4299.23,
+    "mean_latency_baseline_ms": 130.271,
+    "mean_latency_speculative_ms": 97.091,
+    "predicted_correct_rate": 0.5,
+    "latency_speedup": 1.3418,
+    "tokens_per_dollar_baseline": 12580.0,
+    "tokens_per_dollar_speculative": 16879.23
+  }
+}

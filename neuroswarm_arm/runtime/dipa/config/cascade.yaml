@@ -1,4 +1,3 @@
-# Cascade tier policy
 tiers:
   - id: 1
     backend: tier1
@@ -13,52 +12,56 @@ tiers:
     model: tier3
     acceptance_threshold: 0.0
 
-confidence:
-  empty_score: 0.0
-  base_score: 0.5
-  length_bonus_cap: 0.4
-  length_divisor: 8000.0
-  uncertainty_penalty: 0.2
-  uncertainty_phrases:
-    - "I don't know"
-    - "cannot"
-
 speculation:
   enabled: true
   self_speculation: true
   ngram_size: 24
   draft_min: 12
   draft_max: 48
-  # ASCR Adaptive Speculative Cascade Runtime knobs
-  strategy: draft_model
-  verify_strategy: block
-  graph: default_linear
-  draft_len: 8
-  accept_threshold: 0.7
-  verify_batch_size: 1
-  speculation_depth: 1
 
-ascr:
-  enabled: true
-  strategy: draft_model
-  verify_strategy: block
-  graph: default_linear
+confidence:
+  uncertainty_phrases:
+    - "i don't know"
+    - "cannot determine"
+    - "insufficient information"
 
 fallback:
   on_all_tiers_fail: degraded
   degraded_message: "Inference temporarily degraded."
 
-hardness_routing:
-  enabled: true
-  bands:
-    basic:
-      max_complexity: 0.40
-      tier: 1
-    medium:
-      max_complexity: 0.65
-      tier: 2
-    advanced:
-      tier: 3
-  length_bump:
-    medium_min_tokens: 256
-    advanced_min_tokens: 512
+escalation_graphs:
+  default_linear:
+    nodes:
+      start:
+        kind: start
+        tier_id: 1
+      tier1:
+        kind: tier
+        tier_id: 1
+      tier2:
+        kind: tier
+        tier_id: 2
+      tier3:
+        kind: tier
+        tier_id: 3
+      accept:
+        kind: accept
+    edges:
+      - from: start
+        to: tier1
+        condition: always
+      - from: tier1
+        to: tier2
+        condition: low_confidence
+      - from: tier1
+        to: accept
+        condition: accept
+      - from: tier2
+        to: tier3
+        condition: low_confidence
+      - from: tier2
+        to: accept
+        condition: accept
+      - from: tier3
+        to: accept
+        condition: always

@@ -1,55 +1,37 @@
-# Adaptive Speculative Cascade Runtime — master config
-enabled: true
-quality_cascade_fallback: true
-text_agree_accept: true
-default_graph: default_linear
-
 defaults:
+  draft_len: 16
+  accept_threshold: 0.78
   proposal_strategy: draft_model
-  verify_strategy: logits
-  draft_len: 8
-  # Speculative / logits path
-  accept_threshold: 0.7
-  # Quality-cascade path (env: NSA_ASCR_QUALITY_ACCEPT_THRESHOLD)
-  quality_accept_threshold: 0.55
-  quality_early_accept_floor: 0.52
-  escalate_threshold: 0.4
-  verify_batch_size: 1
-  speculation_depth: 1
-  max_rounds: 4
+  verify_strategy: block
+  graph: default_linear
+
+escalation_graphs:
+  default_linear:
+    nodes:
+      start: {kind: start, tier_id: 1}
+      tier1: {kind: tier, tier_id: 1}
+      tier2: {kind: tier, tier_id: 2}
+      tier3: {kind: tier, tier_id: 3}
+      accept: {kind: accept}
+    edges:
+      - {from: start, to: tier1, condition: always}
+      - {from: tier1, to: tier2, condition: low_confidence}
+      - {from: tier1, to: accept, condition: accept}
+      - {from: tier2, to: tier3, condition: low_confidence}
+      - {from: tier2, to: accept, condition: accept}
+      - {from: tier3, to: accept, condition: always}
+
+strategies:
+  self_speculation:
+    enabled: true
+    ngram_size: 24
+    draft_min: 12
+    draft_max: 48
+  logits:
+    tau_floor: 0.30
 
 confidence:
-  empty_score: 0.0
-  base_score: 0.55
-  length_bonus_cap: 0.25
-  length_divisor: 2000.0
-  short_clear_bonus: 0.18
-  short_clear_max_chars: 480
-  short_clear_min_chars: 24
-  completeness_bonus: 0.08
-  uncertainty_penalty: 0.25
-  uncertainty_phrases:
-    - "I don't know"
-    - "I do not know"
-    - "cannot"
-    - "I'm not sure"
-    - "i am not sure"
-    - "unclear"
   weights:
-    agreement: 0.30
-    quality: 0.25
-    historical: 0.15
-    entropy_inv: 0.10
-    tool: 0.10
-    reasoning: 0.05
-    runtime: 0.05
-
-arm:
-  numa_aware: true
-  pin_draft_pool: true
-  pin_verify_pool: true
-  report_unavailable: true
-
-telemetry:
-  emit_ascr_metrics: true
-  alias_dipa_cascade: true
+    text_agreement: 0.4
+    entropy: 0.3
+    quality_score: 0.3

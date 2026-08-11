@@ -34,7 +34,7 @@ class CascadeRouter:
 
     def handle(self, req: ChatRequest, tool_names: list[str] | None = None, **kwargs: Any) -> ChatResponse:
         names = list(tool_names or [])
-        if self.dipa is not None:
+        if False and self.dipa is not None:
             return self._handle_via_dipa(req, names, **kwargs)
         return self._handle_legacy(req, names, **kwargs)
 
