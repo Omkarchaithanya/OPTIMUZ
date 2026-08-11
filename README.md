@@ -1,11 +1,9 @@
-
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/skandaganesha24/some-placeholder.png" alt="NeuroSwarm-Arm" width="340" style="border-radius: 10px;">
+  <img src="./Optimuz_logo.png" alt="Optimuz" width="340" style="border-radius: 10px;">
 </p>
 
 <p align="center">
-  <strong>Optimuz — Optimize, Innovate, Elevate. A self-evolving, cost-optimized multi-agent AI runtime built natively for Arm Neoverse.</strong>
+  <strong>Optimuz â€” Optimize, Innovate, Elevate. A self-evolving, cost-optimized multi-agent AI runtime built natively for Arm Neoverse.</strong>
 </p>
 
 <p align="center">
@@ -23,21 +21,54 @@
   </a>
 </p>
 
-**NeuroSwarm-Arm** is an advanced MVP running on a single GCP Axion VM, redefining efficient AI workloads. By combining llama.cpp CPU inference on Arm64 with an innovative three-tier CPU cascade routing, semantic MCP tool selection, and reasoning-token governance, we bring the best of model capability to Arm platforms.
+<p align="center">
+  <a href="https://huggingface.co/blog/matryoshka">
+    <img src="https://img.shields.io/badge/Matryoshka%20Embeddings-Truncating-9B59B6?style=for-the-badge&logoColor=white" alt="Matryoshka Embeddings">
+  </a>
+  <a href="https://github.com/ryancodrai/turbovec">
+    <img src="https://img.shields.io/badge/TurboVec-Indexing-F39C12?style=for-the-badge&logo=github&logoColor=white" alt="TurboVec">
+  </a>
+  <a href="https://medium.com/ai-science/speculative-decoding-make-llm-inference-faster-c004501af120">
+    <img src="https://img.shields.io/badge/Speculative-Decoding-E74C3C?style=for-the-badge&logoColor=white" alt="Speculative Decoding">
+  </a>
+</p>
 
-[Implementation Plan](04-IMPLEMENTATION-PLAN.md) · [Benchmarks](BENCHMARKS.md) · [Problem Statement](01-PROBLEM-STATEMENT.md)
+<p align="center">
+  <a href="https://arxiv.org/abs/2512.15834">
+    <img src="https://img.shields.io/badge/Speculative%20Tool-Calling-3498DB?style=for-the-badge&logo=arxiv&logoColor=white" alt="Speculative Tool Calling">
+  </a>
+  <a href="https://research.google/blog/speculative-cascades-a-hybrid-approach-for-smarter-faster-llm-inference/">
+    <img src="https://img.shields.io/badge/Speculative-Cascading-1ABC9C?style=for-the-badge&logo=google&logoColor=white" alt="Speculative Cascading">
+  </a>
+  <a href="https://github.com/SalesforceAIResearch/xLAM">
+    <img src="https://img.shields.io/badge/xLAM%20Model-Integration-34495E?style=for-the-badge&logo=github&logoColor=white" alt="xLAM Model">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing">
+    <img src="https://img.shields.io/badge/Open%20Knowledge-Format-2ECC71?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Open Knowledge Format">
+  </a>
+  <a href="https://github.com/mem0ai/mem0">
+    <img src="https://img.shields.io/badge/Mem0-Memory%20Management-16A085?style=for-the-badge&logo=github&logoColor=white" alt="Mem0">
+  </a>
+</p>
+
+**Optimuz** is an advanced MVP running on a single GCP Axion VM, redefining efficient AI workloads. By combining llama.cpp CPU inference on Arm64 with an innovative three-tier CPU cascade routing, semantic MCP tool selection, and reasoning-token governance, we bring the best of model capability to Arm platforms.
+
+[Implementation Plan](04-IMPLEMENTATION-PLAN.md) Â· [Benchmarks](BENCHMARKS.md) Â· [Problem Statement](01-PROBLEM-STATEMENT.md)
 
 ---
 
 ## The Crisis This Solves
 
-**Agentic AI on the cloud is broken.** Most of the $0.40–$2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
+**Agentic AI on the cloud is broken.** Most of the $0.40â€“$2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
 
-**NeuroSwarm-Arm fixes this** with a three-tier CPU-CPU speculative cascade (0.5B → 3B → 8B) on **KleidiAI-optimized llama.cpp**, a semantic MCP tool router, a reasoning-token governor, and an evolution loop driven directly by **Arm Performix**.
+**Optimuz fixes this** with a three-tier CPU-CPU speculative cascade (0.5B â†’ 3B â†’ 8B) on **KleidiAI-optimized llama.cpp**, a semantic MCP tool router, a reasoning-token governor, and an evolution loop driven directly by **Arm Performix**.
 
 <div align="center">
 
-| Pain | The NeuroSwarm-Arm Fix |
+| Pain | The Optimuz Fix |
 |---|---|
 | **Tool-schema flood** | Semantic MCP router (TurboVec + Top-K schema injection) |
 | **Reasoning-token burn** | RTG governor tied to confidence and KV pressure |
@@ -49,7 +80,7 @@
 </div>
 
 > [!IMPORTANT]
-> **Hardware Honesty:** Our live demo runs on **GCP Axion `c4a-standard-8`** (Neoverse-V2, SVE2/I8MM/BF16). NeuroSwarm-Arm auto-detects NUMA/CXL/MTE at runtime and degrades safely on single-NUMA VMs like Axion, while activating NUMA-split cascades and CXL KV pooling natively on multi-socket Neoverse hosts.
+> **Hardware Honesty:** Our live demo runs on **GCP Axion `c4a-standard-8`** (Neoverse-V2, SVE2/I8MM/BF16). Optimuz auto-detects NUMA/CXL/MTE at runtime and degrades safely on single-NUMA VMs like Axion, while activating NUMA-split cascades and CXL KV pooling natively on multi-socket Neoverse hosts.
 
 ---
 
@@ -81,7 +112,7 @@ We don't just claim performance; we measure it with Arm Performix Instruction Mi
 | **Matryoshka Embeddings Truncating** | Dynamically scales embedding dimensions for optimal latency and accuracy, minimizing redundant computations. |
 | **Turbovec Indexing** | Blazing-fast ANN (replaces FAISS) natively optimized for ARM architecture to perform rapid semantic searches. |
 | **Speculative Decoding** | Generates multiple draft tokens in parallel, vastly increasing throughput for language model outputs. |
-| **Speculative Tool Calling** | Overlaps draft tool prediction with main cascade generation (predict → overlap MCP → ToolOutputCache). |
+| **Speculative Tool Calling** | Overlaps draft tool prediction with main cascade generation (predict â†’ overlap MCP â†’ ToolOutputCache). |
 | **Model Cascading** | Intelligent multi-tier CPU cascade routing (Inspired by Google Cascade) that shifts workloads based on reasoning demands. |
 | **KV Cache Optimization** | Zero-waste MAKS multi-agent memory KV session deduplication, dropping memory bottlenecks at scale. |
 | **xLAM Model Integration** | Powered by Qwen model finetuned (xLAM) for highly effective instruction following and reasoning. |
@@ -100,7 +131,7 @@ We don't just claim performance; we measure it with Arm Performix Instruction Mi
 | Acronym | One-liner | Where to Verify |
 |---|---|---|
 | **HAOE** | Layer-1 task-graph runtime (schedules work; never runs models) | `tests/runtime/haoe` |
-| **DIPA** | Layer-2 inference kernel (planner → routers → cascade → backends) | `tests/runtime/dipa` |
+| **DIPA** | Layer-2 inference kernel (planner â†’ routers â†’ cascade â†’ backends) | `tests/runtime/dipa` |
 | **ASCR** | Adaptive speculative / quality cascade across CPU tiers | `docs/armcascade/` |
 | **AROP** | Evolution / runtime optimization loop (Performix-fed policies) | `performix/` |
 | **OKF** | Ontology / knowledge files compiled into agent context | `docs/` |
@@ -114,7 +145,7 @@ We don't just claim performance; we measure it with Arm Performix Instruction Mi
 
 ---
 
-## Why NeuroSwarm-Arm Is Unique
+## Why Optimuz Is Unique
 
 **This project:** Masters the hardware. We don't just run inference; we bend it to the will of the Arm architecture.
 
@@ -123,8 +154,8 @@ We don't just claim performance; we measure it with Arm Performix Instruction Mi
 <details>
 <summary><b>1. &nbsp;Semantic MCP Tool Router (Turbovec Powered)</b></summary>
 
-Replaces naïve injection of all MCP tool schemas with Top-K semantic routing:
-`nomic-embed-text-v1.5 → TurboVec (2/4-bit TurboQuant when active; else exact NumPy) → hybrid retrieval → rerank → Top-K schemas → DIPA`
+Replaces naÃ¯ve injection of all MCP tool schemas with Top-K semantic routing:
+`nomic-embed-text-v1.5 â†’ TurboVec (2/4-bit TurboQuant when active; else exact NumPy) â†’ hybrid retrieval â†’ rerank â†’ Top-K schemas â†’ DIPA`
 
 Default `NSA_ROUTER_TURBOVEC_MIN_TOOLS=0` so TurboVec runs whenever the ARM64 wheel imports. Advertised tool YAML IDs match FastMCP execute names natively.
 </details>
@@ -140,8 +171,8 @@ Draws on [arXiv:2512.15834](https://arxiv.org/abs/2512.15834) (Speculative Tool 
 <details>
 <summary><b>3. &nbsp;HAOE (Layer 1) & DIPA (Layer 2)</b></summary>
 
-**HAOE:** Chat requests execute as HAOE task graphs (route → KV session → DIPA → checkpoint → response). High-confidence turns take the gateway fast-path, lowering orchestration overhead significantly.
-**DIPA:** Inference Runtime Kernel. Agents never call llama.cpp / vLLM directly — everything flows through DIPA (execution planner → model routers → ASCR → streaming).
+**HAOE:** Chat requests execute as HAOE task graphs (route â†’ KV session â†’ DIPA â†’ checkpoint â†’ response). High-confidence turns take the gateway fast-path, lowering orchestration overhead significantly.
+**DIPA:** Inference Runtime Kernel. Agents never call llama.cpp / vLLM directly â€” everything flows through DIPA (execution planner â†’ model routers â†’ ASCR â†’ streaming).
 </details>
 
 <details>
@@ -166,14 +197,14 @@ Models are strictly optimized with **Q4_0** quantization and auto-truncated to *
 ## Repository Structure
 
 ```text
-Neuroswarm/
-├── benchmarks/         # Arm Performix receipts, metrics, and JSON evidence
-├── docker/             # Container specs for CPU-cascade testing
-├── docs/               # Architecture ADRs, layer diagrams, and evidence packs
-├── helm/               # Kubernetes deployment assets for multi-node testing
-├── neuroswarm_arm/     # Core runtime (HAOE Layer-1 and DIPA Layer-2)
-├── scripts/            # Bootstrap, deploy, and bench runner utilities
-└── tests/              # Pytest suite for runtime validation
+Optimuz/
+â”œâ”€â”€ benchmarks/         # Arm Performix receipts, metrics, and JSON evidence
+â”œâ”€â”€ docker/             # Container specs for CPU-cascade testing
+â”œâ”€â”€ docs/               # Architecture ADRs, layer diagrams, and evidence packs
+â”œâ”€â”€ helm/               # Kubernetes deployment assets for multi-node testing
+â”œâ”€â”€ optimuz/     # Core runtime (HAOE Layer-1 and DIPA Layer-2)
+â”œâ”€â”€ scripts/            # Bootstrap, deploy, and bench runner utilities
+â””â”€â”€ tests/              # Pytest suite for runtime validation
 ```
 
 ---
@@ -189,7 +220,7 @@ uv sync --all-groups
 # Setup environment variables
 cp .env.example .env   # Linux/macOS; on Windows: Copy-Item .env.example .env
 
-# Fire up the NeuroSwarm-Arm platform
+# Fire up the Optimuz platform
 docker compose up --build
 ```
 
@@ -213,4 +244,7 @@ curl -s http://127.0.0.1:8000/v1/chat/completions \
 
 ---
 
-*NeuroSwarm-Arm: Built for the ARM Cloud AI Optimization Challenge.*
+*Optimuz: Built for the ARM Cloud AI Optimization Challenge.*
+
+
+
