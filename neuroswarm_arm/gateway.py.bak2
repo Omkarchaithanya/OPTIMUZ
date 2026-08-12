@@ -337,14 +337,14 @@ class AgentGateway:
             handle_kwargs["tool_high_confidence"] = True
             handle_kwargs["high_conf_thinking_budget"] = high_conf_budget
         try:
-            chat_req = req.model_copy(update={"session_id": session_id})
-            if not tool_names and not tool_schemas:
-                msgs = list(getattr(req, "messages", []))
-                if msgs and not any((getattr(m, "role", None) == "system" or (isinstance(m, dict) and m.get("role") == "system")) for m in msgs):
-                    system_msg = {"role": "system", "content": "You are a helpful assistant. Answer the user directly and concisely."}
-                    chat_req = req.model_copy(update={"session_id": session_id, "messages": [system_msg] + msgs})
             response = engine.handle(
-                chat_req,
+                req.model_copy(update={"session_id": session_id}),
+                tool_names,
+                **handle_kwargs,
+            )
+        except TypeError:
+            handle_kwargs.pop("tool_high_confidence", None)
+            handle_kwargs.pop("high_conf_thinking_budget", None)
             response = engine.handle(
                 req.model_copy(update={"session_id": session_id}),
                 tool_names,

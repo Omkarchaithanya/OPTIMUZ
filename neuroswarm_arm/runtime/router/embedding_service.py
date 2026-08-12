@@ -114,6 +114,21 @@ class _FastEmbedAdapter:
         return self._dims
 
 
+
+def _truncate_matryoshka(embedding, target_dim):
+    """Nomic v1.5 Matryoshka truncation: layer-norm -> slice -> renormalize."""
+    import numpy as np
+    vec = embedding.astype(np.float32)
+    mean = np.mean(vec)
+    var = np.var(vec)
+    vec = (vec - mean) / np.sqrt(var + 1e-5)
+    vec = vec[:target_dim]
+    norm = np.linalg.norm(vec)
+    if norm > 0:
+        vec = vec / norm
+    return vec
+
+
 class EmbeddingService:
     def __init__(
         self,
@@ -310,9 +325,10 @@ class EmbeddingService:
 
     def encode(self, text: str, *, normalize: bool | None = None) -> np.ndarray:
         timer = self.metrics.timer() if self.metrics else None
-        model_name = self.spec.model_name
+        # Dimension-aware cache key prevents cross-dim pollution (Matryoshka)
+        cache_key = f"{self.spec.model_name}:{self.dims}"
         if self.cache is not None:
-            cached = self.cache.get(model_name, text)
+            cached = self.cache.get(cache_key, text)
             if cached is not None:
                 if self.metrics and timer:
                     self.metrics.set("router_embedding_latency_ms", timer.ms())
@@ -323,7 +339,7 @@ class EmbeddingService:
             vec = l2_normalize(vec)
         vec = validate_embedding(vec, self.dims)
         if self.cache is not None:
-            self.cache.set(model_name, text, vec)
+            self.cache.set(cache_key, text, vec)
         if self.metrics and timer:
             self.metrics.set("router_embedding_latency_ms", timer.ms())
         return vec
@@ -340,17 +356,16 @@ class EmbeddingService:
         return self.encode(prefixed, normalize=normalize)
 
     def _encode_uncached(self, text: str) -> np.ndarray:
+        target_dim = self.dims
         if self._onnx is not None:
             emb = self._encode_onnx(text)
-            target_dim = getattr(self.spec, "matryoshka_dim", None)
-            if target_dim and target_dim < emb.shape[-1]:
+            if emb.shape[-1] > target_dim:
                 emb = _truncate_matryoshka(emb, target_dim)
             return emb
         if self._model is not None:
             arr = self._model.encode(text, normalize_embeddings=False)
             emb = np.asarray(arr, dtype=np.float32).reshape(-1)
-            target_dim = getattr(self.spec, "matryoshka_dim", None)
-            if target_dim and target_dim < emb.shape[-1]:
+            if emb.shape[-1] > target_dim:
                 emb = _truncate_matryoshka(emb, target_dim)
             return emb
         if not self._allow_hash:
