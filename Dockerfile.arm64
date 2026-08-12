@@ -7,8 +7,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     NSA_HOST=0.0.0.0 \
     NSA_PORT=8000
 
-# htop/btop/procps for live SSH debugging (real /proc — not demo metrics).
-# btop: apt when available; else official aarch64 musl binary from GitHub releases.
 ARG BTOP_VERSION=1.4.0
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl ca-certificates htop procps sysstat \
@@ -18,9 +16,8 @@ RUN apt-get update \
             && tar -xjf /tmp/btop.tbz -C /tmp/btop-extract \
             && install -m 0755 /tmp/btop-extract/btop/bin/btop /usr/local/bin/btop \
             && rm -rf /tmp/btop.tbz /tmp/btop-extract)) \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install gateway runtime deps first (avoid pulling the full optional ML stack in-image).
 COPY pyproject.toml README.md LICENSE requirements-gateway.txt /app/
 COPY neuroswarm_arm /app/neuroswarm_arm
 COPY templates /app/templates
@@ -31,11 +28,18 @@ ENV FASTEMBED_CACHE_PATH=/app/.fastembed_cache \
     NSA_ROUTER_FASTEMBED_CACHE=/app/.fastembed_cache \
     NSA_ROUTER_EMBEDDING_BACKEND=fastembed
 
+# Split install to avoid single-layer bloat; purge pip cache between
 RUN pip install --no-cache-dir -r /app/requirements-gateway.txt \
     && pip install --no-cache-dir /app/packages/okf \
     && pip install --no-cache-dir --no-deps -e . \
-    && mkdir -p /app/.fastembed_cache \
-    && python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='nomic-ai/nomic-embed-text-v1.5', cache_dir='/app/.fastembed_cache')"
+    && rm -rf /root/.cache/pip /tmp/pip-* /tmp/tmp* \
+    && find /usr/local/lib/python3.12/site-packages -name "*.pyc" -delete 2>/dev/null || true \
+    && find /usr/local/lib/python3.12/site-packages -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+
+# Pre-download FastEmbed model in isolated layer
+RUN mkdir -p /app/.fastembed_cache \
+    && python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='nomic-ai/nomic-embed-text-v1.5', cache_dir='/app/.fastembed_cache')" \
+    && rm -rf /root/.cache /tmp/*
 
 EXPOSE 8000
 CMD ["python", "-m", "neuroswarm_arm.main"]
