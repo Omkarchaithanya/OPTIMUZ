@@ -15,10 +15,22 @@ from .models import EmbeddingSpec
 from .router_exceptions import EmbeddingError
 from .router_metrics import RouterMetrics
 from .similarity import l2_normalize, validate_embedding
+def _truncate_matryoshka(embedding: np.ndarray, target_dim: int) -> np.ndarray:
+    """Nomic v1.5 Matryoshka truncation: layer-norm -> slice -> renormalize."""
+    vec = embedding.astype(np.float32)
+    mean = np.mean(vec)
+    var = np.var(vec)
+    vec = (vec - mean) / np.sqrt(var + 1e-5)
+    vec = vec[:target_dim]
+    norm = np.linalg.norm(vec)
+    if norm > 0:
+        vec = vec / norm
+    return vec
+
 
 
 KNOWN_MODELS = {
-    "nomic-embed-text-v1.5": 384,
+    "nomic-embed-text-v1.5": 768,
     "bge-small-en-v1.5": 384,
     "sentence-transformers/all-MiniLM-L6-v2": 384,
     "all-MiniLM-L6-v2": 384,
@@ -128,6 +140,9 @@ class EmbeddingService:
 
     @property
     def dims(self) -> int:
+        target = getattr(self.spec, "matryoshka_dim", None)
+        if target:
+            return int(target)
         return int(self._dims or self.spec.dims or self.fallback_dims)
 
     @property
@@ -215,13 +230,29 @@ class EmbeddingService:
 
     def _try_sentence_transformers(self) -> bool:
         try:
-            from sentence_transformers import SentenceTransformer  # type: ignore
-
-            self._model = SentenceTransformer(self.spec.model_name, device="cpu")
+            from sentence_transformers import SentenceTransformer
+        except Exception as exc:
+            print(f"[ST DEBUG] import failed: {exc}")
+            return False
+        try:
+            target_dim = getattr(self.spec, "matryoshka_dim", None) or self.dims or 768
+            model_map = {
+                "nomic-embed-text-v1.5": "nomic-ai/nomic-embed-text-v1.5",
+                "bge-small-en-v1.5": "BAAI/bge-small-en-v1.5",
+            }
+            model_name = model_map.get(self.spec.model_name, self.spec.model_name)
+            print(f"[ST DEBUG] Loading: {model_name} truncate_dim={target_dim}")
+            self._model = SentenceTransformer(
+                model_name, device="cpu", trust_remote_code=True, truncate_dim=target_dim
+            )
             self._dims = int(self._model.get_sentence_embedding_dimension())
             self._backend = "sentence-transformers"
+            print(f"[ST DEBUG] Success! dims={self._dims}")
             return True
-        except Exception:
+        except Exception as exc:
+            print(f"[ST DEBUG] Load failed: {exc}")
+            import traceback
+            traceback.print_exc()
             self._model = None
             return False
 
@@ -310,10 +341,18 @@ class EmbeddingService:
 
     def _encode_uncached(self, text: str) -> np.ndarray:
         if self._onnx is not None:
-            return self._encode_onnx(text)
+            emb = self._encode_onnx(text)
+            target_dim = getattr(self.spec, "matryoshka_dim", None)
+            if target_dim and target_dim < emb.shape[-1]:
+                emb = _truncate_matryoshka(emb, target_dim)
+            return emb
         if self._model is not None:
             arr = self._model.encode(text, normalize_embeddings=False)
-            return np.asarray(arr, dtype=np.float32).reshape(-1)
+            emb = np.asarray(arr, dtype=np.float32).reshape(-1)
+            target_dim = getattr(self.spec, "matryoshka_dim", None)
+            if target_dim and target_dim < emb.shape[-1]:
+                emb = _truncate_matryoshka(emb, target_dim)
+            return emb
         if not self._allow_hash:
             raise EmbeddingError(_HASH_REMEDIATION)
         return _hash_embed(text, self.dims)
@@ -327,7 +366,7 @@ class EmbeddingService:
             inputs = self._tokenizer(text, return_tensors="np", padding=True, truncation=True)
             feeds = {k: v for k, v in inputs.items()}
             outs = self._onnx.run(None, feeds)
-            return np.asarray(outs[0], dtype=np.float32).reshape(-1)[: self.dims]
+            return np.asarray(outs[0], dtype=np.float32).reshape(-1)
         except EmbeddingError:
             raise
         except Exception as exc:

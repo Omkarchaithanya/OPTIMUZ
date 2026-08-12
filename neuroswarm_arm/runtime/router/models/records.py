@@ -18,6 +18,8 @@ class EmbeddingSpec:
     model_name: str = "nomic-embed-text-v1.5"
     dims: int = 384
     normalize: bool = True
+    matryoshka_dim: int = 768
+    matryoshka_dim: int = 768
     # fastembed | sentence-transformers | onnx | hash | auto
     backend: str = "fastembed"
     use_onnx: bool = False

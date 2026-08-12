@@ -49,7 +49,7 @@ def build_router(
     embedder = EmbeddingService(
         EmbeddingSpec(
             model_name=config.encoder_name,
-            dims=384,
+            dims=config.matryoshka_dim,
             normalize=True,
             backend=config.embedding_backend,
             use_onnx=config.use_onnx,
@@ -57,6 +57,7 @@ def build_router(
             onnx_path=config.onnx_path,
             tokenizer_path=config.tokenizer_path,
             fastembed_cache_dir=config.fastembed_cache_dir,
+            matryoshka_dim=config.matryoshka_dim,
         ),
         cache=cache,
         metrics=metrics,

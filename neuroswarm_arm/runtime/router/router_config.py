@@ -78,6 +78,7 @@ class RouterConfig:
     embedding_backend: str = "fastembed"
     fastembed_cache_dir: str | None = None
     fallback_dims: int = 64
+    matryoshka_dim: int = 256
     ann_backend: str = "turbovec"
     # Use TurboVec IdMapIndex only at/above this tool count; below → exact float32.
     # Default 0: activate TurboVec whenever the wheel imports (exact only as real fallback).
@@ -140,6 +141,7 @@ class RouterConfig:
             fastembed_cache_dir=os.getenv("NSA_ROUTER_FASTEMBED_CACHE")
             or os.getenv("FASTEMBED_CACHE_PATH"),
             fallback_dims=_i("NSA_ROUTER_FALLBACK_DIMS", 64),
+            matryoshka_dim=_i("NSA_ROUTER_MATRYOSHKA_DIM", 256),
             ann_backend=os.getenv("NSA_ROUTER_ANN_BACKEND", "turbovec").lower(),
             turbovec_min_tools=_i("NSA_ROUTER_TURBOVEC_MIN_TOOLS", 0),
             metric=os.getenv("NSA_ROUTER_METRIC", "cosine").lower(),
