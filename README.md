@@ -247,4 +247,6 @@ curl -s http://127.0.0.1:8000/v1/chat/completions \
 *Optimuz: Built for the ARM Cloud AI Optimization Challenge.*
 
 
+## ⚖️ License
 
+MIT — see the [LICENSE](https://github.com/Omkarchaithanya/OPTIMUZ/blob/main/LICENSE) file for details.
