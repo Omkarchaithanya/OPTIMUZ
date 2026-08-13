@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Optimuz â€” Optimize, Innovate, Elevate. A self-evolving, cost-optimized multi-agent AI runtime built natively for Arm Neoverse.</strong>
+  <strong>Optimuz Agentic AI Inference Optimized for Arm Neoverse — 63.8% throughput gain, 92.7% context reduction, 95% cost drop vs. naive baseline.</strong>
 </p>
 
 <p align="center">
@@ -154,7 +154,7 @@
 
 | | Baseline | Optimized | Delta | How We Verify |
 |---|---|---|---|---|
-| **DeepSeek-R1-Distill-Llama-8B decode** | ~10 tok/s (single model) | **~18 tok/s** | **+80%** | `benchmarks/run_kpis.py --p1-spec-decode` |
+| **DeepSeek-R1-Distill-Qwen-7B decode** | ~10 tok/s (single model) | **~18 tok/s** | **+80%** | `benchmarks/run_kpis.py --p1-spec-decode` |
 | **Draft-model acceptance rate** | N/A | **~72%** | — | Cascade trace logs |
 | **Cost per 1K tokens** | $0.0308 | **$0.00154** | **-95%** | `latest/layer-verify/08-economics.json` |
 
