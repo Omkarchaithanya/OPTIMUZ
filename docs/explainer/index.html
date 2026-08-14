@@ -419,7 +419,7 @@
         const btn = document.createElement("button");
         btn.className = `tab-btn ${p.id === currentPillarId ? 'active' : ''}`;
         btn.innerHTML = `${p.num} &#183; ${p.short}`;
-        btn.onclick = () => selectPillar(p.id);
+        btn.addEventListener("click", function() { selectPillar(p.id); });
         container.appendChild(btn);
       });
     }
@@ -467,8 +467,8 @@
         svgHtml += `
           <g transform="translate(${node.x}, ${node.y})">
             <rect x="${-node.w/2}" y="${-node.h/2}" width="${node.w}" height="${node.h}" class="node-rect" />
-            <text y="-8" class="node-title">${node.label}</text>
-            <text y="14" class="node-subtitle">${node.sub}</text>
+            <text y="-8" text-anchor="middle" class="node-title">${node.label}</text>
+            <text y="14" text-anchor="middle" class="node-subtitle">${node.sub}</text>
           </g>
         `;
       });
@@ -476,7 +476,9 @@
       svg.innerHTML = svgHtml;
       
       if (!isPlaying) {
-        svg.pauseAnimations();
+        if (svg.pauseAnimations) {
+          svg.pauseAnimations();
+        }
       }
     }
 
@@ -504,11 +506,11 @@
       const btn = document.getElementById("play-pause-btn");
       
       if (isPlaying) {
-        svg.unpauseAnimations();
+        if (svg.unpauseAnimations) svg.unpauseAnimations();
         text.innerText = "Pause";
         btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> <span id="play-pause-text">Pause</span>`;
       } else {
-        svg.pauseAnimations();
+        if (svg.pauseAnimations) svg.pauseAnimations();
         text.innerText = "Play";
         btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> <span id="play-pause-text">Play</span>`;
       }
@@ -516,7 +518,7 @@
     
     document.getElementById("reset-btn").addEventListener("click", () => {
       const svg = document.getElementById("diagram-svg");
-      svg.setCurrentTime(0);
+      if (svg.setCurrentTime) svg.setCurrentTime(0);
       if (!isPlaying) {
           document.getElementById("play-pause-btn").click();
       }
