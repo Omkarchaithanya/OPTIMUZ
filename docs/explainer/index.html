@@ -289,10 +289,10 @@
         title: "Six pillars. One closed loop.",
         status: "confirmed from code",
         source: "neuroswarm_arm/arop/tuner.py",
-        description: "The <strong>AROP</strong> (Autonomous Runtime Optimization Policy) engine actively tunes parameters based on live telemetry. It consumes a <code>MetricsBundle</code> and evaluates rules (R0-R3) to adjust parameters like <code>cascade_draft_k</code> and <code>governor_thinking_cap</code>. The resulting <code>PolicyState</code> is clamped and fed back into the runtime.",
+        description: "The <strong>AROP</strong> (Autonomous Runtime Optimization Policy) engine actively tunes parameters based on live telemetry. It consumes a <code>ARM Performix</code> and evaluates rules (R0-R3) to adjust parameters like <code>cascade_draft_k</code> and <code>governor_thinking_cap</code>. The resulting <code>PolicyState</code> is clamped and fed back into the runtime.",
         diagram: {
           nodes: [
-            { id: "metrics", label: "MetricsBundle", sub: "hotspots, simd, cascade", x: 120, y: 190, w: 180, h: 64 },
+            { id: "bundle", label: "ARM Performix", sub: "hotspots, simd, cascade", x: 120, y: 190, w: 180, h: 64 },
             { id: "tuner", label: "tuner.py", sub: "decide(bundle, policy)", x: 425, y: 190, w: 190, h: 64 },
             { id: "policy", label: "PolicyState", sub: "cascade_draft_k, etc.", x: 730, y: 190, w: 180, h: 64 }
           ],
