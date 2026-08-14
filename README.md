@@ -229,10 +229,10 @@ We have built a fully interactive, self-contained architecture explainer documen
 
 **[👉 View the Interactive Explainer on GitHub Pages](https://omkarchaithanya.github.io/Neuroswarm/docs/explainer/index.html)**
 
-![](docs/explainer/preview.svg?v=4)
+![](docs/explainer/preview.svg)
 
 ### 1. Closed-Loop Optimization (AROP)
-Driven by `neuroswarm_arm/arop/tuner.py`, using `ARM Performix` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
+Driven by `neuroswarm_arm/arop/tuner.py`, using `MetricsBundle` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
 
 ### 2. Speculative Cascade (ASCR)
 Driven by `neuroswarm_arm/runtime/dipa/speculative/engine.py`, masking tool-call latency by predicting tool calls (B2) and running `executor.speculate(pred)` (B3) in parallel with cascade generation.
@@ -271,18 +271,18 @@ Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`a
 </div>
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Plane 1: HAOE — Task-Graph Orchestration Runtime (NUMA + SVE2 aware) │
-│ ┌─────────────────────────────────────────────────────────────────────┐ │
-│ │ Plane 2: DIPA — Inference Kernel (KleidiAI + Speculative Cascade) │ │
-│ │ ┌─────────────────────────────────────────────────────────────┐ │ │
-│ │ │ Plane 3: ASCR — Adaptive Speculative Cascade Router │ │ │
-│ │ │ (0.5B draft → 3B verifier → 8B target, CPU-CPU only) │ │ │
-│ │ └─────────────────────────────────────────────────────────────┘ │ │
-│ └─────────────────────────────────────────────────────────────────────┘ │
+│ Plane 1: HAOE — Task-Graph Orchestration Runtime (NUMA + SVE2 aware)        │
+│ ┌─────────────────────────────────────────────────────────────────────┐     │
+│ │ Plane 2: DIPA — Inference Kernel (KleidiAI + Speculative Cascade)   │     │
+│ │ ┌─────────────────────────────────────────────────────────────┐     │     │
+│ │ │ Plane 3: ASCR — Adaptive Speculative Cascade Router         │     │     │
+│ │ │ (0.5B draft → 3B verifier → 8B target, CPU-CPU only)        │     │     │
+│ │ └─────────────────────────────────────────────────────────────┘     │     │
+│ └─────────────────────────────────────────────────────────────────────┘     │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Plane 4: MAKS — Shared KV-Cache Pool (MTE-secured, CXL-aware) │
+│ Plane 4: MAKS — Shared KV-Cache Pool (MTE-secured, CXL-aware)               │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Plane 5: RTG — Reasoning-Token Governor (confidence-aware budget) │
+│ Plane 5: RTG — Reasoning-Token Governor (confidence-aware budget)           │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 
