@@ -7,6 +7,9 @@
 </p>
 
 <p align="center">
+  <a href="https://youtu.be/kGejAdcynPs">
+    <img src="https://img.shields.io/badge/Watch_Demo-YouTube-red?style=for-the-badge&logo=youtube" alt="Demo Video">
+  </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+">
   </a>
@@ -105,16 +108,6 @@ Driven by `neuroswarm_arm/governor.py`, dynamically capping Chain-of-Thought out
 
 ### 6. Adaptive Quantization (AQR)
 Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`agent_role` and `workload_class`) to precision formats (like `Q5_K_M` or `Q4_0`) to balance reasoning quality against execution latency.
-
----
-
-## 📺 Demo Video
-
-<a href="https://youtu.be/kGejAdcynPs">
-  <img src="https://img.youtube.com/vi/kGejAdcynPs/0.jpg" alt="OPTIMUZ Arm AI Optimization Demo" width="600">
-</a>
-
-*Click the thumbnail above to watch the 3-minute demo on YouTube.*
 
 ---
 
