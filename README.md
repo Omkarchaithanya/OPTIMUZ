@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/kGejAdcynPs">
+  <a href="https://youtu.be/kFW05HZWaAo">
     <img src="https://img.shields.io/badge/Watch_Demo-YouTube-red?style=for-the-badge&logo=youtube" alt="Demo Video">
   </a>
   <a href="https://www.python.org/downloads/">
