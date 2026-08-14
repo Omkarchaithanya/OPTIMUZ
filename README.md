@@ -58,15 +58,16 @@
 
 > This project was built for the **Arm AI Optimization Challenge 2026 — Cloud AI Track**. Every optimization is reproducible, benchmarked with Arm Performix, and packaged as reusable artifacts for the Arm developer community.
 
-[Implementation Plan](04-IMPLEMENTATION-PLAN.md) · [Benchmarks](BENCHMARKS.md) · [Problem Statement](01-PROBLEM-STATEMENT.md)
+
+[Implementation Plan](04-IMPLEMENTATION-PLAN.md) Â· [Benchmarks](BENCHMARKS.md) Â· [Problem Statement](01-PROBLEM-STATEMENT.md)
 
 ---
 
 ## The Crisis This Solves
 
-**Agentic AI on the cloud is broken.** Most of the $0.40–$2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
+**Agentic AI on the cloud is broken.** Most of the $0.40â€“$2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
 
-**Optimuz fixes this** with a three-tier CPU-CPU speculative cascade (0.5B → 3B → 8B) on **KleidiAI-optimized llama.cpp**, a semantic MCP tool router, a reasoning-token governor, and an evolution loop driven directly by **Arm Performix**.
+**Optimuz fixes this** with a three-tier CPU-CPU speculative cascade (0.5B â†’ 3B â†’ 8B) on **KleidiAI-optimized llama.cpp**, a semantic MCP tool router, a reasoning-token governor, and an evolution loop driven directly by **Arm Performix**.
 
 <div align="center">
 
@@ -113,13 +114,13 @@
 
 **What we changed:**
 1. Rebuilt llama.cpp with KleidiAI micro-kernels via XNNPack:
-```bash
+   ```bash
    cmake -B build -DGGML_NATIVE=OFF -DGGML_CPU_ALL_VARIANTS=OFF \
          -DGGML_OPENMP=ON -DGGML_BF16=ON -DGGML_NEON=ON \
          -DCMAKE_BUILD_TYPE=Release \
          -DCMAKE_C_FLAGS="-march=armv8.2-a+sve2+bf16"
    cmake --build build --config Release -j$(nproc)
-```
+   ```
 2. Enabled KleidiAI `I8MM` / `SVE2` / `BF16` kernel paths at runtime via `GGML_KLEIDIAI=1`.
 3. Pinned threads to Neoverse V2 performance cores and disabled hyper-threading contention.
 
@@ -221,6 +222,7 @@
 3. **Fast-path:** High-confidence chat requests bypass the full DAG and go straight to DIPA inference.
 4. **MCP process pool:** Warm stdio servers eliminate 600ms+ cold-start per tool call.
 
+
 ---
 
 ## Interactive Architecture Explainer
@@ -260,7 +262,7 @@ Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`a
 | **Matryoshka Embeddings Truncating** | Dynamically scales embedding dimensions for optimal latency and accuracy, minimizing redundant computations. |
 | **Turbovec Indexing** | Blazing-fast ANN (replaces FAISS) natively optimized for ARM architecture to perform rapid semantic searches. |
 | **Speculative Decoding** | Generates multiple draft tokens in parallel, vastly increasing throughput for language model outputs. |
-| **Speculative Tool Calling** | Overlaps draft tool prediction with main cascade generation (predict → overlap MCP → ToolOutputCache). |
+| **Speculative Tool Calling** | Overlaps draft tool prediction with main cascade generation (predict â†’ overlap MCP â†’ ToolOutputCache). |
 | **Model Cascading** | Intelligent multi-tier CPU cascade routing (Inspired by Google Cascade) that shifts workloads based on reasoning demands. |
 | **KV Cache Optimization** | Zero-waste MAKS multi-agent memory KV session deduplication, dropping memory bottlenecks at scale. |
 | **xLAM Model Integration** | Powered by Qwen model finetuned (xLAM) for highly effective instruction following and reasoning. |
@@ -270,28 +272,28 @@ Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`a
 
 </div>
 
+```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Plane 1: HAOE — Task-Graph Orchestration Runtime (NUMA + SVE2 aware)        │
-│ ┌─────────────────────────────────────────────────────────────────────┐     │
-│ │ Plane 2: DIPA — Inference Kernel (KleidiAI + Speculative Cascade)   │     │
-│ │ ┌─────────────────────────────────────────────────────────────┐     │     │
-│ │ │ Plane 3: ASCR — Adaptive Speculative Cascade Router         │     │     │
-│ │ │ (0.5B draft → 3B verifier → 8B target, CPU-CPU only)        │     │     │
-│ │ └─────────────────────────────────────────────────────────────┘     │     │
-│ └─────────────────────────────────────────────────────────────────────┘     │
+│  Plane 1: HAOE — Task-Graph Orchestration Runtime (NUMA + SVE2 aware)      │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │  Plane 2: DIPA — Inference Kernel (KleidiAI + Speculative Cascade) │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │   │
+│  │  │  Plane 3: ASCR — Adaptive Speculative Cascade Router        │   │   │
+│  │  │  (0.5B draft → 3B verifier → 8B target, CPU-CPU only)      │   │   │
+│  │  └─────────────────────────────────────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Plane 4: MAKS — Shared KV-Cache Pool (MTE-secured, CXL-aware)               │
+│  Plane 4: MAKS — Shared KV-Cache Pool (MTE-secured, CXL-aware)             │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Plane 5: RTG — Reasoning-Token Governor (confidence-aware budget)           │
+│  Plane 5: RTG — Reasoning-Token Governor (confidence-aware budget)         │
 └─────────────────────────────────────────────────────────────────────────────┘
-
-
+```
 **Data Flow:**
-
+```
 User Query → HAOE Router → Semantic MCP Tool Selection (Top-K) → RTG Budget Set
-→ DIPA Planner → ASCR Cascade (draft → verify) → llama.cpp + KleidiAI
-→ KV Checkpoint in MAKS → Tool Call via MCP Pool → Response Stream
-
+    → DIPA Planner → ASCR Cascade (draft → verify) → llama.cpp + KleidiAI
+    → KV Checkpoint in MAKS → Tool Call via MCP Pool → Response Stream
+```
 
 ## Reusable Artifacts (For the Developer Community)
 
@@ -333,6 +335,7 @@ A typical production agent stack today:
 | 5 | Deploy with Helm on Axion/Graviton/Cobalt | 10 min | [`helm/README.md`](./helm/README.md) |
 
 **Result:** Same agent capabilities, **$0.0015–$0.02 per task**, running on **$0.15/hr** Axion CPU instead of **$1.50/hr** GPU+x86.
+---
 
 ---
 
@@ -348,6 +351,7 @@ A typical production agent stack today:
 
 **Auto-Detection:** At startup, OPTIMUZ probes `/proc/cpuinfo`, `numactl`, and `cxl-list` to select the optimal configuration. No manual tuning required.
 
+
 ## The 5-Plane Acronym Map
 
 <div align="center">
@@ -355,7 +359,7 @@ A typical production agent stack today:
 | Acronym | One-liner | Where to Verify |
 |---|---|---|
 | **HAOE** | Layer-1 task-graph runtime (schedules work; never runs models) | `tests/runtime/haoe` |
-| **DIPA** | Layer-2 inference kernel (planner → routers → cascade → backends) | `tests/runtime/dipa` |
+| **DIPA** | Layer-2 inference kernel (planner â†’ routers â†’ cascade â†’ backends) | `tests/runtime/dipa` |
 | **ASCR** | Adaptive speculative / quality cascade across CPU tiers | `docs/armcascade/` |
 | **AROP** | Evolution / runtime optimization loop (Performix-fed policies) | `performix/` |
 | **OKF** | Ontology / knowledge files compiled into agent context | `docs/` |
@@ -378,8 +382,8 @@ A typical production agent stack today:
 <details>
 <summary><b>1. &nbsp;Semantic MCP Tool Router (Turbovec Powered)</b></summary>
 
-Replaces naïve injection of all MCP tool schemas with Top-K semantic routing:
-`nomic-embed-text-v1.5 → TurboVec (2/4-bit TurboQuant when active; else exact NumPy) → hybrid retrieval → rerank → Top-K schemas → DIPA`
+Replaces naÃ¯ve injection of all MCP tool schemas with Top-K semantic routing:
+`nomic-embed-text-v1.5 â†’ TurboVec (2/4-bit TurboQuant when active; else exact NumPy) â†’ hybrid retrieval â†’ rerank â†’ Top-K schemas â†’ DIPA`
 
 Default `NSA_ROUTER_TURBOVEC_MIN_TOOLS=0` so TurboVec runs whenever the ARM64 wheel imports. Advertised tool YAML IDs match FastMCP execute names natively.
 </details>
@@ -395,8 +399,8 @@ Draws on [arXiv:2512.15834](https://arxiv.org/abs/2512.15834) (Speculative Tool 
 <details>
 <summary><b>3. &nbsp;HAOE (Layer 1) & DIPA (Layer 2)</b></summary>
 
-**HAOE:** Chat requests execute as HAOE task graphs (route → KV session → DIPA → checkpoint → response). High-confidence turns take the gateway fast-path, lowering orchestration overhead significantly.
-**DIPA:** Inference Runtime Kernel. Agents never call llama.cpp / vLLM directly — everything flows through DIPA (execution planner → model routers → ASCR → streaming).
+**HAOE:** Chat requests execute as HAOE task graphs (route â†’ KV session â†’ DIPA â†’ checkpoint â†’ response). High-confidence turns take the gateway fast-path, lowering orchestration overhead significantly.
+**DIPA:** Inference Runtime Kernel. Agents never call llama.cpp / vLLM directly â€” everything flows through DIPA (execution planner â†’ model routers â†’ ASCR â†’ streaming).
 </details>
 
 <details>
@@ -517,7 +521,6 @@ Attach Arm Performix → Code Hotspots recipe → enter the PID → run under lo
 
 ---
 
-*Optimuz: Built for the ARM Cloud AI Optimization Challenge.*
 
 ## ⚖️ License
 
