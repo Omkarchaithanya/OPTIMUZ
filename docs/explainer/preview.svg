@@ -54,29 +54,29 @@
     <rect width="800" height="600" class="main-card" />
     
     <!-- Header -->
-    <text x="40" y="40" class="label-row">OPTIMUZ &middot; AROP &middot; INTERACTIVE EXPLAINER</text>
+    <text x="40" y="40" class="label-row">OPTIMUZ &#183; AROP &#183; INTERACTIVE EXPLAINER</text>
     <text x="40" y="85" class="main-title">Six pillars. One closed loop.</text>
     <text x="40" y="115" class="subtitle">Click through each stage. Every number below is taken from the source code.</text>
     
     <!-- Tabs -->
     <g transform="translate(40, 140)">
       <rect x="0" y="0" width="95" height="32" class="tab-bg-active" />
-      <text x="47.5" y="17" class="tab-text-active">1 &middot; AROP</text>
+      <text x="47.5" y="17" class="tab-text-active">1 &#183; AROP</text>
       
       <rect x="105" y="0" width="95" height="32" class="tab-bg" />
-      <text x="152.5" y="17" class="tab-text">2 &middot; ASCR</text>
+      <text x="152.5" y="17" class="tab-text">2 &#183; ASCR</text>
       
       <rect x="210" y="0" width="130" height="32" class="tab-bg" />
-      <text x="275" y="17" class="tab-text">3 &middot; MCP Router</text>
+      <text x="275" y="17" class="tab-text">3 &#183; MCP Router</text>
       
       <rect x="350" y="0" width="110" height="32" class="tab-bg" />
-      <text x="405" y="17" class="tab-text">4 &middot; MAKS KV</text>
+      <text x="405" y="17" class="tab-text">4 &#183; MAKS KV</text>
       
       <rect x="470" y="0" width="80" height="32" class="tab-bg" />
-      <text x="510" y="17" class="tab-text">5 &middot; RTG</text>
+      <text x="510" y="17" class="tab-text">5 &#183; RTG</text>
       
       <rect x="560" y="0" width="80" height="32" class="tab-bg" />
-      <text x="600" y="17" class="tab-text">6 &middot; AQR</text>
+      <text x="600" y="17" class="tab-text">6 &#183; AQR</text>
     </g>
     
     <!-- Diagram Panel -->
@@ -100,7 +100,7 @@
           <circle r="4" class="pulse-dot-feedback">
             <animateMotion dur="2.5s" repeatCount="indefinite" path="M 670 122 Q 670 200 395 200 Q 120 200 120 122" />
           </circle>
-          <text x="395" y="215" class="caption-text">policy update &middot; every N seconds, bypasses inference</text>
+          <text x="395" y="215" class="caption-text">policy update &#183; every N seconds, bypasses inference</text>
 
           <!-- Nodes -->
           <g transform="translate(120, 90)">
@@ -136,14 +136,21 @@
     
     <!-- Description -->
     <g transform="translate(40, 490)">
-      <rect width="720" height="50" class="desc-box" />
-      <rect width="3" height="50" class="desc-accent" rx="1.5" />
+      <rect width="720" height="74" class="desc-box" />
+      <rect width="3" height="74" class="desc-accent" rx="1.5" />
       
       <text x="20" y="30" class="desc-text">
-        <tspan class="desc-strong">Stage 1.</tspan> The AROP engine tunes parameters based on live telemetry. It consumes a 
+        <tspan class="desc-strong">Stage 1.</tspan> The AROP engine actively tunes parameters based on live telemetry. It consumes a 
       </text>
-      <rect x="618" y="16" width="92" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
-      <text x="622" y="29" class="desc-code">MetricsBundle</text>
+      <rect x="635" y="16" width="105" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
+      <text x="639" y="29" class="desc-code">MetricsBundle</text>
+      
+      <text x="20" y="55" class="desc-text">
+        and evaluates rules to adjust parameters, feeding back a 
+      </text>
+      <rect x="440" y="41" width="85" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
+      <text x="444" y="54" class="desc-code">PolicyState</text>
+      <text x="530" y="55" class="desc-text">.</text>
     </g>
     
     <!-- Footer -->

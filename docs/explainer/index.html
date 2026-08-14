@@ -204,11 +204,13 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 600;
+      text-anchor: middle;
     }
     .node-subtitle {
       fill: var(--text-muted);
       font-family: 'Inter', sans-serif;
       font-size: 11px;
+      text-anchor: middle;
     }
     .edge-forward {
       fill: none;
@@ -239,7 +241,7 @@
 <body>
   <div class="main-card">
     <div class="label-row" id="top-label">
-      OPTIMUZ &middot; <span id="lbl-pillar-name">AROP</span> &middot; INTERACTIVE EXPLAINER
+      OPTIMUZ &#183; <span id="lbl-pillar-name">AROP</span> &#183; INTERACTIVE EXPLAINER
     </div>
     
     <div class="header">
@@ -416,7 +418,7 @@
       pillars.forEach(p => {
         const btn = document.createElement("button");
         btn.className = `tab-btn ${p.id === currentPillarId ? 'active' : ''}`;
-        btn.innerHTML = `${p.num} &middot; ${p.short}`;
+        btn.innerHTML = `${p.num} &#183; ${p.short}`;
         btn.onclick = () => selectPillar(p.id);
         container.appendChild(btn);
       });
