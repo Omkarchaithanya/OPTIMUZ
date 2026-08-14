@@ -4,91 +4,103 @@
   "top3_accuracy": 1.0,
   "top5_accuracy": 1.0,
   "latency_ms": {
-    "p50": 54.95841850643046,
-    "p95": 61.06996149173938,
-    "p99": 62.347997090546414,
-    "mean": 48.74396583181806
+    "p50": 1.1270579416304827,
+    "p95": 1.367527642287314,
+    "p99": 1.4087326126173139,
+    "mean": 1.1718589424466093
   },
-  "avg_token_reduction": 0.1569,
+  "avg_token_reduction": 0.8738,
   "ann_backend": "exact",
   "cases": [
     {
       "query": "Search the web and summarize GitHub issues for the project",
       "expected": "github",
       "picked": [
-        "github",
-        "web-search",
-        "browser",
-        "slack",
-        "s3"
+        "github.search_issues",
+        "web.search",
+        "github.search_code",
+        "github.list_issues",
+        "github.create_issue"
       ],
-      "confidence": 0.4261943946520487,
-      "latency_ms": 54.172
+      "confidence": 0.5604361526019989,
+      "latency_ms": 1.419,
+      "hit1": true,
+      "hit3": true
     },
     {
       "query": "Find a page in the browser and capture the visible text",
       "expected": "browser",
       "picked": [
-        "browser",
-        "web-search",
-        "slack",
-        "github",
-        "postgres"
+        "browser.snapshot",
+        "browser.navigate",
+        "browser.screenshot",
+        "web.fetch_url",
+        "browser.extract_links"
       ],
-      "confidence": 0.4307808912277221,
-      "latency_ms": 15.676
+      "confidence": 0.6307572411128453,
+      "latency_ms": 1.163,
+      "hit1": true,
+      "hit3": true
     },
     {
       "query": "Store structured data in postgres and query rows",
       "expected": "postgres",
       "picked": [
-        "postgres",
-        "s3",
-        "web-search",
-        "github",
-        "slack"
+        "postgres.query",
+        "postgres.describe_table",
+        "postgres.insert_row",
+        "postgres.list_tables",
+        "postgres.create_index"
       ],
-      "confidence": 0.4282262764215469,
-      "latency_ms": 62.668
+      "confidence": 0.5977471469640733,
+      "latency_ms": 1.091,
+      "hit1": true,
+      "hit3": true
     },
     {
       "query": "Use slack to send a channel update about the release",
       "expected": "slack",
       "picked": [
-        "slack",
-        "github",
-        "s3",
-        "browser",
-        "web-search"
+        "slack.post_message",
+        "slack.set_topic",
+        "slack.add_reaction",
+        "slack.upload_file",
+        "slack.get_user"
       ],
-      "confidence": 0.47255588233470913,
-      "latency_ms": 47.926
+      "confidence": 0.6336185369491578,
+      "latency_ms": 1.213,
+      "hit1": true,
+      "hit3": true
     },
     {
       "query": "Upload an artifact to object storage",
       "expected": "s3",
       "picked": [
-        "s3",
-        "postgres",
-        "github",
-        "browser",
-        "slack"
+        "s3.put_object",
+        "s3.get_object",
+        "slack.upload_file",
+        "s3.delete_object",
+        "s3.copy_object"
       ],
-      "confidence": 0.45892064373095826,
-      "latency_ms": 56.277
+      "confidence": 0.586619533465022,
+      "latency_ms": 1.066,
+      "hit1": true,
+      "hit3": true
     },
     {
       "query": "Look up a related web source before answering",
       "expected": "web-search",
       "picked": [
-        "web-search",
-        "browser",
-        "github",
-        "slack",
-        "postgres"
+        "web.search",
+        "web.news",
+        "slack.get_user",
+        "web.scholar",
+        "web.images"
       ],
-      "confidence": 0.43807778283357607,
-      "latency_ms": 55.745
+      "confidence": 0.5868704830408095,
+      "latency_ms": 1.079,
+      "hit1": true,
+      "hit3": true
     }
   ],
   "full": {
@@ -99,96 +111,108 @@
     "false_positives": 0,
     "false_negatives": 0,
     "latency_ms": {
-      "p50": 54.95841850643046,
-      "p95": 61.06996149173938,
-      "p99": 62.347997090546414,
-      "mean": 48.74396583181806
+      "p50": 1.1270579416304827,
+      "p95": 1.367527642287314,
+      "p99": 1.4087326126173139,
+      "mean": 1.1718589424466093
     },
-    "embedding_throughput_qps": 372.55,
-    "ann_throughput_qps": 47016.44,
-    "avg_token_reduction": 0.1569,
-    "memory_mb": 966.14,
+    "embedding_throughput_qps": 51303.35,
+    "ann_throughput_qps": 33334.49,
+    "avg_token_reduction": 0.8738,
+    "memory_mb": 0.0,
     "ann_backend": "exact",
-    "embedding_backend": "sentence-transformers",
-    "tools_indexed": 6,
+    "embedding_backend": "fastembed",
+    "tools_indexed": 40,
     "cases": [
       {
         "query": "Search the web and summarize GitHub issues for the project",
         "expected": "github",
         "picked": [
-          "github",
-          "web-search",
-          "browser",
-          "slack",
-          "s3"
+          "github.search_issues",
+          "web.search",
+          "github.search_code",
+          "github.list_issues",
+          "github.create_issue"
         ],
-        "confidence": 0.4261943946520487,
-        "latency_ms": 54.172
+        "confidence": 0.5604361526019989,
+        "latency_ms": 1.419,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Find a page in the browser and capture the visible text",
         "expected": "browser",
         "picked": [
-          "browser",
-          "web-search",
-          "slack",
-          "github",
-          "postgres"
+          "browser.snapshot",
+          "browser.navigate",
+          "browser.screenshot",
+          "web.fetch_url",
+          "browser.extract_links"
         ],
-        "confidence": 0.4307808912277221,
-        "latency_ms": 15.676
+        "confidence": 0.6307572411128453,
+        "latency_ms": 1.163,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Store structured data in postgres and query rows",
         "expected": "postgres",
         "picked": [
-          "postgres",
-          "s3",
-          "web-search",
-          "github",
-          "slack"
+          "postgres.query",
+          "postgres.describe_table",
+          "postgres.insert_row",
+          "postgres.list_tables",
+          "postgres.create_index"
         ],
-        "confidence": 0.4282262764215469,
-        "latency_ms": 62.668
+        "confidence": 0.5977471469640733,
+        "latency_ms": 1.091,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Use slack to send a channel update about the release",
         "expected": "slack",
         "picked": [
-          "slack",
-          "github",
-          "s3",
-          "browser",
-          "web-search"
+          "slack.post_message",
+          "slack.set_topic",
+          "slack.add_reaction",
+          "slack.upload_file",
+          "slack.get_user"
         ],
-        "confidence": 0.47255588233470913,
-        "latency_ms": 47.926
+        "confidence": 0.6336185369491578,
+        "latency_ms": 1.213,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Upload an artifact to object storage",
         "expected": "s3",
         "picked": [
-          "s3",
-          "postgres",
-          "github",
-          "browser",
-          "slack"
+          "s3.put_object",
+          "s3.get_object",
+          "slack.upload_file",
+          "s3.delete_object",
+          "s3.copy_object"
         ],
-        "confidence": 0.45892064373095826,
-        "latency_ms": 56.277
+        "confidence": 0.586619533465022,
+        "latency_ms": 1.066,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Look up a related web source before answering",
         "expected": "web-search",
         "picked": [
-          "web-search",
-          "browser",
-          "github",
-          "slack",
-          "postgres"
+          "web.search",
+          "web.news",
+          "slack.get_user",
+          "web.scholar",
+          "web.images"
         ],
-        "confidence": 0.43807778283357607,
-        "latency_ms": 55.745
+        "confidence": 0.5868704830408095,
+        "latency_ms": 1.079,
+        "hit1": true,
+        "hit3": true
       }
     ]
   }

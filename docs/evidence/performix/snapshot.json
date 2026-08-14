@@ -1,121 +1,147 @@
 {
   "available": 1.0,
-  "cycles": 1000000.0,
-  "instructions": 2500000.0,
-  "ipc": 2.49,
+  "cycles": 0.0,
+  "instructions": 0.0,
+  "ipc": 0.0,
   "cache_misses": 0.0,
   "branch_misses": 0.0,
   "pmu_available": 1.0,
   "hotspots": [
     {
       "function": "<Unknown code in libggml-cpu.so.0.17.0>",
-      "pct": 79.047,
-      "samples": 2207.0
+      "pct": 89.848,
+      "samples": 79099.0
+    },
+    {
+      "function": "getaddrinfo",
+      "pct": 8.319,
+      "samples": 7324.0
     },
     {
       "function": "<Unknown code in libomp.so.5>",
-      "pct": 12.393,
-      "samples": 346.0
-    },
-    {
-      "function": "__sched_yield",
-      "pct": 3.188,
-      "samples": 89.0
+      "pct": 0.582,
+      "samples": 512.0
     },
     {
       "function": "__expf_finite",
-      "pct": 1.97,
-      "samples": 55.0
+      "pct": 0.518,
+      "samples": 456.0
     },
     {
-      "function": "<Unknown code in libllama-server-impl.so>",
-      "pct": 0.967,
-      "samples": 27.0
-    },
-    {
-      "function": "<Unknown code in libggml-base.so.0.17.0>",
-      "pct": 0.681,
-      "samples": 19.0
-    },
-    {
-      "function": "<Unknown code in libllama-common.so.0.0.1>",
-      "pct": 0.466,
-      "samples": 13.0
-    },
-    {
-      "function": "<Unknown code in libllama.so.0.0.1>",
-      "pct": 0.394,
-      "samples": 11.0
-    },
-    {
-      "function": "Unknown symbol @ 0x000a1cc0",
-      "pct": 0.322,
-      "samples": 9.0
+      "function": "Unknown symbol @ 0x000a15c0",
+      "pct": 0.175,
+      "samples": 154.0
     },
     {
       "function": "<Unknown code in [vdso]>",
-      "pct": 0.143,
-      "samples": 4.0
+      "pct": 0.152,
+      "samples": 134.0
     },
     {
-      "function": "<Unknown code in libc.so.6>",
-      "pct": 0.072,
-      "samples": 2.0
+      "function": "<Unknown code in libllama.so.0.0.1>",
+      "pct": 0.073,
+      "samples": 64.0
     },
     {
-      "function": "Unknown symbol @ 0x00094244",
-      "pct": 0.072,
-      "samples": 2.0
-    },
-    {
-      "function": "pthread_mutex_lock",
-      "pct": 0.036,
-      "samples": 1.0
-    },
-    {
-      "function": "__exp2f_finite",
-      "pct": 0.036,
-      "samples": 1.0
+      "function": "<Unknown code in libllama-common.so.0.0.1>",
+      "pct": 0.064,
+      "samples": 56.0
     },
     {
       "function": "cosf32",
-      "pct": 0.036,
-      "samples": 1.0
+      "pct": 0.049,
+      "samples": 43.0
+    },
+    {
+      "function": "<Unknown code in libc.so.6>",
+      "pct": 0.035,
+      "samples": 31.0
+    },
+    {
+      "function": "lfind",
+      "pct": 0.03,
+      "samples": 26.0
+    },
+    {
+      "function": "<Unknown code in libggml-base.so.0.17.0>",
+      "pct": 0.027,
+      "samples": 24.0
+    },
+    {
+      "function": "__exp2f_finite",
+      "pct": 0.024,
+      "samples": 21.0
+    },
+    {
+      "function": "<Unknown code in libllama-server-impl.so>",
+      "pct": 0.023,
+      "samples": 20.0
+    },
+    {
+      "function": "Unknown symbol @ 0x00088a10",
+      "pct": 0.016,
+      "samples": 14.0
+    },
+    {
+      "function": "sinf32",
+      "pct": 0.015,
+      "samples": 13.0
     },
     {
       "function": "powf32",
-      "pct": 0.036,
+      "pct": 0.011,
+      "samples": 10.0
+    },
+    {
+      "function": "Unknown symbol @ 0x000e0bc0",
+      "pct": 0.011,
+      "samples": 10.0
+    },
+    {
+      "function": "log2f64",
+      "pct": 0.005,
+      "samples": 4.0
+    },
+    {
+      "function": "argz_replace",
+      "pct": 0.003,
+      "samples": 3.0
+    },
+    {
+      "function": "logf32",
+      "pct": 0.002,
+      "samples": 2.0
+    },
+    {
+      "function": "Unknown symbol @ 0x0008a2c0",
+      "pct": 0.002,
+      "samples": 2.0
+    },
+    {
+      "function": "__uflow",
+      "pct": 0.001,
       "samples": 1.0
     },
     {
-      "function": "Unknown symbol @ 0x00081dd0",
-      "pct": 0.036,
+      "function": "<Unknown code in libm.so.6>",
+      "pct": 0.001,
       "samples": 1.0
     },
     {
-      "function": "Unknown symbol @ 0x00094630",
-      "pct": 0.036,
-      "samples": 1.0
-    },
-    {
-      "function": "Unknown symbol @ 0x00092ac0",
-      "pct": 0.036,
-      "samples": 1.0
-    },
-    {
-      "function": "__libc_free",
-      "pct": 0.036,
+      "function": "Unknown symbol @ 0x00082070",
+      "pct": 0.001,
       "samples": 1.0
     }
   ],
   "topdown": {
-    "frontend_bound": 0.22,
-    "backend_bound": 0.41
+    "frontend_bound": 0.0,
+    "backend_bound": 0.0
   },
   "metrics": {
-    "hotspot_top_pct": 79.047
+    "hotspot_top_pct": 89.848
   },
   "source": "apx",
-  "captured_at": "2026-07-20T19:14:56Z",
-  "note": "PID-scoped under chat load; single Compose stack; libggml has DWARF but apx may still label Unknown for container mappings"
+  "recommendations": [
+    "Focus hottest function with Arm Performix code_hotspots / cpu_microarchitecture recipes"
+  ]
 }

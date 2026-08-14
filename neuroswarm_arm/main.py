@@ -858,6 +858,21 @@ def export_metrics(request: Request) -> Response:
         payload = f"{core}\n{extras}\n"
     else:
         payload = f"{core}\n"
+    bench_path = Path(
+        os.getenv(
+            "NSA_BENCHMARK_METRICS_PATH",
+            "work/benchmarks/arop_closed_loop/benchmark.prom",
+        )
+    )
+    try:
+        if bench_path.is_file():
+            bench_txt = _strip_eof(
+                bench_path.read_text(encoding="utf-8", errors="replace")
+            )
+            if bench_txt:
+                payload = f"{payload.rstrip()}\n{bench_txt}\n"
+    except Exception:
+        pass
     if want_om:
         payload = f"{payload.rstrip()}\n# EOF\n"
         ctype = "application/openmetrics-text; version=1.0.0; charset=utf-8"

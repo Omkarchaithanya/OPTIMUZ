@@ -4,204 +4,225 @@
     "platform": "Linux-6.17.0-1020-gcp-aarch64-with-glibc2.39",
     "machine": "aarch64",
     "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
-    "ts": 1784398665.900002,
+    "ts": 1785763299.7849717,
     "repo_root": "/home/tejaswini2482_gmail_com/neuroswarm-arm",
-    "cwd": "/home/tejaswini2482_gmail_com/neuroswarm-arm",
-    "cpu_count": 8,
-    "memory_total_mb": 32020.66,
-    "memory_available_mb": 14117.84
+    "cwd": "/home/tejaswini2482_gmail_com/neuroswarm-arm"
   },
   "router_accuracy": {
     "status": "ok",
-    "top1_accuracy": 0.8333,
+    "top1_accuracy": 1.0,
     "top3_accuracy": 1.0,
     "top5_accuracy": 1.0,
     "latency_ms": {
-      "p50": 39.21294747851789,
-      "p95": 56.97917696670629,
-      "p99": 57.35779775422998,
-      "mean": 35.37708548052857
+      "p50": 19.372597918845713,
+      "p95": 35.638606059364974,
+      "p99": 39.77362604346127,
+      "mean": 22.67312832797567
     },
-    "avg_token_reduction": 0.1603,
+    "avg_token_reduction": 0.8738,
     "ann_backend": "exact",
     "cases": [
       {
         "query": "Search the web and summarize GitHub issues for the project",
         "expected": "github",
         "picked": [
-          "web-search",
-          "github",
-          "browser",
-          "slack",
-          "postgres"
+          "github.search_issues",
+          "web.search",
+          "github.search_code",
+          "github.list_issues",
+          "github.create_issue"
         ],
-        "confidence": 0.34042951909436103,
-        "latency_ms": 2.534
+        "confidence": 0.5604361526019989,
+        "latency_ms": 40.807,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Find a page in the browser and capture the visible text",
         "expected": "browser",
         "picked": [
-          "browser",
-          "web-search",
-          "slack",
-          "github",
-          "postgres"
+          "browser.snapshot",
+          "browser.navigate",
+          "browser.screenshot",
+          "web.fetch_url",
+          "browser.extract_links"
         ],
-        "confidence": 0.4307808912277221,
-        "latency_ms": 24.165
+        "confidence": 0.6307572411128453,
+        "latency_ms": 20.132,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Store structured data in postgres and query rows",
         "expected": "postgres",
         "picked": [
-          "postgres",
-          "s3",
-          "web-search",
-          "github",
-          "slack"
+          "postgres.query",
+          "postgres.describe_table",
+          "postgres.insert_row",
+          "postgres.list_tables",
+          "postgres.create_index"
         ],
-        "confidence": 0.4282262764215469,
-        "latency_ms": 54.261
+        "confidence": 0.5977471469640733,
+        "latency_ms": 19.611,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Use slack to send a channel update about the release",
         "expected": "slack",
         "picked": [
-          "slack",
-          "github",
-          "s3",
-          "browser",
-          "web-search"
+          "slack.post_message",
+          "slack.set_topic",
+          "slack.add_reaction",
+          "slack.upload_file",
+          "slack.get_user"
         ],
-        "confidence": 0.47255588233470913,
-        "latency_ms": 55.559
+        "confidence": 0.6336185369491578,
+        "latency_ms": 19.134,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Upload an artifact to object storage",
         "expected": "s3",
         "picked": [
-          "s3",
-          "postgres",
-          "github",
-          "browser",
-          "slack"
+          "s3.put_object",
+          "s3.get_object",
+          "slack.upload_file",
+          "s3.delete_object",
+          "s3.copy_object"
         ],
-        "confidence": 0.45892064373095826,
-        "latency_ms": 57.452
+        "confidence": 0.586619533465022,
+        "latency_ms": 17.78,
+        "hit1": true,
+        "hit3": true
       },
       {
         "query": "Look up a related web source before answering",
         "expected": "web-search",
         "picked": [
-          "web-search",
-          "browser",
-          "github",
-          "slack",
-          "postgres"
+          "web.search",
+          "web.news",
+          "slack.get_user",
+          "web.scholar",
+          "web.images"
         ],
-        "confidence": 0.43807778283357607,
-        "latency_ms": 18.29
+        "confidence": 0.5868704830408095,
+        "latency_ms": 18.574,
+        "hit1": true,
+        "hit3": true
       }
     ],
     "full": {
       "status": "ok",
-      "top1_accuracy": 0.8333,
+      "top1_accuracy": 1.0,
       "top3_accuracy": 1.0,
       "top5_accuracy": 1.0,
       "false_positives": 0,
       "false_negatives": 0,
       "latency_ms": {
-        "p50": 39.21294747851789,
-        "p95": 56.97917696670629,
-        "p99": 57.35779775422998,
-        "mean": 35.37708548052857
+        "p50": 19.372597918845713,
+        "p95": 35.638606059364974,
+        "p99": 39.77362604346127,
+        "mean": 22.67312832797567
       },
-      "embedding_throughput_qps": 1346.14,
-      "ann_throughput_qps": 47126.5,
-      "avg_token_reduction": 0.1603,
-      "memory_mb": 1075.15,
+      "embedding_throughput_qps": 1456.92,
+      "ann_throughput_qps": 32134.98,
+      "avg_token_reduction": 0.8738,
+      "memory_mb": 0.0,
       "ann_backend": "exact",
-      "embedding_backend": "sentence-transformers",
-      "tools_indexed": 6,
+      "embedding_backend": "fastembed",
+      "tools_indexed": 40,
       "cases": [
         {
           "query": "Search the web and summarize GitHub issues for the project",
           "expected": "github",
           "picked": [
-            "web-search",
-            "github",
-            "browser",
-            "slack",
-            "postgres"
+            "github.search_issues",
+            "web.search",
+            "github.search_code",
+            "github.list_issues",
+            "github.create_issue"
           ],
-          "confidence": 0.34042951909436103,
-          "latency_ms": 2.534
+          "confidence": 0.5604361526019989,
+          "latency_ms": 40.807,
+          "hit1": true,
+          "hit3": true
         },
         {
           "query": "Find a page in the browser and capture the visible text",
           "expected": "browser",
           "picked": [
-            "browser",
-            "web-search",
-            "slack",
-            "github",
-            "postgres"
+            "browser.snapshot",
+            "browser.navigate",
+            "browser.screenshot",
+            "web.fetch_url",
+            "browser.extract_links"
           ],
-          "confidence": 0.4307808912277221,
-          "latency_ms": 24.165
+          "confidence": 0.6307572411128453,
+          "latency_ms": 20.132,
+          "hit1": true,
+          "hit3": true
         },
         {
           "query": "Store structured data in postgres and query rows",
           "expected": "postgres",
           "picked": [
-            "postgres",
-            "s3",
-            "web-search",
-            "github",
-            "slack"
+            "postgres.query",
+            "postgres.describe_table",
+            "postgres.insert_row",
+            "postgres.list_tables",
+            "postgres.create_index"
           ],
-          "confidence": 0.4282262764215469,
-          "latency_ms": 54.261
+          "confidence": 0.5977471469640733,
+          "latency_ms": 19.611,
+          "hit1": true,
+          "hit3": true
         },
         {
           "query": "Use slack to send a channel update about the release",
           "expected": "slack",
           "picked": [
-            "slack",
-            "github",
-            "s3",
-            "browser",
-            "web-search"
+            "slack.post_message",
+            "slack.set_topic",
+            "slack.add_reaction",
+            "slack.upload_file",
+            "slack.get_user"
           ],
-          "confidence": 0.47255588233470913,
-          "latency_ms": 55.559
+          "confidence": 0.6336185369491578,
+          "latency_ms": 19.134,
+          "hit1": true,
+          "hit3": true
         },
         {
           "query": "Upload an artifact to object storage",
           "expected": "s3",
           "picked": [
-            "s3",
-            "postgres",
-            "github",
-            "browser",
-            "slack"
+            "s3.put_object",
+            "s3.get_object",
+            "slack.upload_file",
+            "s3.delete_object",
+            "s3.copy_object"
           ],
-          "confidence": 0.45892064373095826,
-          "latency_ms": 57.452
+          "confidence": 0.586619533465022,
+          "latency_ms": 17.78,
+          "hit1": true,
+          "hit3": true
         },
         {
           "query": "Look up a related web source before answering",
           "expected": "web-search",
           "picked": [
-            "web-search",
-            "browser",
-            "github",
-            "slack",
-            "postgres"
+            "web.search",
+            "web.news",
+            "slack.get_user",
+            "web.scholar",
+            "web.images"
           ],
-          "confidence": 0.43807778283357607,
-          "latency_ms": 18.29
+          "confidence": 0.5868704830408095,
+          "latency_ms": 18.574,
+          "hit1": true,
+          "hit3": true
         }
       ]
     }
@@ -231,13 +252,13 @@
   },
   "economics": {
     "status": "ok",
-    "router_top1_accuracy": 0.8333,
+    "router_top1_accuracy": 1.0,
     "router_top3_accuracy": 1.0,
-    "router_avg_token_reduction": 0.1603,
+    "router_avg_token_reduction": 0.8738,
     "governor_mean_cap": 268.25,
     "governor_mean_legacy_cap": 665.5,
     "governor_cap_delta": -397.25,
     "cascade_tier_used": 2,
-    "estimated_savings_score": 0.5698
+    "estimated_savings_score": 0.7815
   }
 }

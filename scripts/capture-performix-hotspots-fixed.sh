@@ -56,9 +56,20 @@ PY
 
 pick_llama_pid() {
   local pid
-  pid="$(pgrep -af 'llama-server.*llama-3.1-8b' | awk '{print $1; exit}' || true)"
+  # Prefer DeepSeek / tier3 7B (Axion demo path), then 8B, then any llama-server.
+  pid="$(pgrep -af 'DeepSeek-R1|Distill-Qwen-7B' | grep -v 'bash\|pgrep\|capture\|apx' | awk '{print $1; exit}' || true)"
   if [[ -z "$pid" ]]; then
-    pid="$(pgrep -af 'llama-server' | grep -v 'bash\|pgrep\|capture' | awk '{print $1; exit}' || true)"
+    pid="$(pgrep -af 'llama-server.*llama-3.1-8b' | awk '{print $1; exit}' || true)"
+  fi
+  if [[ -z "$pid" ]]; then
+    local tid
+    tid="$(docker compose ps -q tier3 2>/dev/null || true)"
+    if [[ -n "$tid" ]]; then
+      pid="$(docker top "$tid" 2>/dev/null | awk 'NR>1 && /llama-server/ {print $2; exit}')"
+    fi
+  fi
+  if [[ -z "$pid" ]]; then
+    pid="$(pgrep -af 'llama-server' | grep -v 'bash\|pgrep\|capture\|apx' | awk '{print $1; exit}' || true)"
   fi
   echo "${pid:-}"
 }
@@ -87,11 +98,19 @@ wait_llama_ready() {
 fire_burst() {
   echo "==> Starting sustained decode load → $API"
   # Keep llama busy for the FULL recipe window (not a single short burst)
+  local model="${NSA_CHAT_MODEL:-}"
+  if [[ -z "$model" ]]; then
+    if echo "$API" | grep -qE ':8083'; then
+      model="tier3"
+    else
+      model="cascade"
+    fi
+  fi
   (
     while true; do
       curl -s -X POST "$API" \
         -H "Content-Type: application/json" \
-        -d '{"model":"cascade","messages":[{"role":"user","content":"Write a 300 word explanation of NUMA on Arm servers."}],"stream":false,"max_tokens":400}' \
+        -d "{\"model\":\"$model\",\"messages\":[{\"role\":\"user\",\"content\":\"Write a 300 word explanation of NUMA on Arm servers.\"}],\"stream\":false,\"max_tokens\":400}" \
         >/tmp/nsa-decode-burst.json || true
       sleep 0.5
     done
@@ -114,18 +133,25 @@ run_apx_recipe() {
   local duration="$4"
   
   echo "==> apx recipe run $recipe --pid $pid --timeout $duration --deploy-tools → $out"
-  
-  EXTRA_PARAMS="" python3 - <<PY
+
+  # Pass shell args via env — unquoted bare names in <<PY are Python NameErrors.
+  NSA_APX_RECIPE="$recipe" NSA_APX_OUT="$out" NSA_APX_PID="$pid" NSA_APX_DURATION="$duration" \
+  EXTRA_PARAMS="" python3 - <<'PY'
 from pathlib import Path
 import os
 from neuroswarm_arm.evolution.performix_client import PerformixClient
 
+recipe = os.environ["NSA_APX_RECIPE"]
+out = os.environ["NSA_APX_OUT"]
+pid = int(os.environ["NSA_APX_PID"])
+duration = int(os.environ["NSA_APX_DURATION"])
+
 c = PerformixClient()
 params = [p for p in os.environ.get("EXTRA_PARAMS", "").split() if p]
 kwargs = dict(
-    duration=int(duration),
+    duration=duration,
     system_wide=False,
-    pid=int(pid),
+    pid=pid,
 )
 if params:
     kwargs["params"] = params
@@ -197,12 +223,14 @@ if [[ -f "$OUT_JSON" ]]; then
 fi
 
 export ALLOW_DEMO
+export NSA_APX_OUT_JSON="$OUT_JSON"
+export NSA_APX_SNAP="$SNAP"
 python3 - <<'PY'
 import json, os, time
 from pathlib import Path
 
-out = Path("$OUT_JSON")
-snap_path = Path("$SNAP")
+out = Path(os.environ["NSA_APX_OUT_JSON"])
+snap_path = Path(os.environ["NSA_APX_SNAP"])
 apx_ok = os.environ.get("APX_OK") == "1"
 allow_demo = os.environ.get("ALLOW_DEMO") == "1"
 

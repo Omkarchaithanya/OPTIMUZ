@@ -3,14 +3,14 @@
   "config": {
     "agents": 8,
     "prompts_per_agent": 20,
-    "docs_path": "C:\\Users\\Tejas\\neuroswarm-arm-gcp-axion\\benchmarks\\test-data\\docs.json",
+    "docs_path": "/home/tejaswini2482_gmail_com/neuroswarm-arm/benchmarks/test-data/docs.json",
     "identity": {
       "model_id": "llama-3.1-8b",
       "quantization": "q4_k_m"
     }
   },
   "dedup_run": {
-    "provider_used_bytes": 6218,
+    "provider_used_bytes": 83898,
     "allocator_used_bytes": 83898,
     "pool_used_bytes": 83898,
     "per_agent_logical_bytes": {
@@ -34,7 +34,7 @@
     "dedup_enabled": true
   },
   "control_run": {
-    "provider_used_bytes": 49744,
+    "provider_used_bytes": 671184,
     "allocator_used_bytes": 671184,
     "pool_used_bytes": 671184,
     "per_agent_logical_bytes": {

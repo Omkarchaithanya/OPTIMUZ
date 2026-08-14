@@ -20,6 +20,7 @@ Dashboards are generated from `neuroswarm_arm.metrics.dashboards.default_dashboa
 | rmf-arm-hardware | ARM Hardware |
 | rmf-performix | Performix |
 | rmf-planner-learning | Planner Learning |
+| neuroswarm-benchmark-scoreboard | Benchmark Scoreboard |
 
 ## Provisioning
 
@@ -33,3 +34,28 @@ python -c "from neuroswarm_arm.metrics.dashboards import write_dashboards; write
 ```
 
 Existing `armora-budget-envelope` / `rcis-runtime-cost` boards remain for plane-specific deep dives; RMF boards are the cross-runtime view.
+
+## Benchmark Scoreboard
+
+Run the benchmark first so it writes `work/benchmarks/arop_closed_loop/benchmark.prom`:
+
+```bash
+python benchmarks/arop_closed_loop_suite.py --gateway-url http://127.0.0.1:8000
+```
+
+The gateway merges that file into `/metrics` via `NSA_BENCHMARK_METRICS_PATH`,
+defaulting to `work/benchmarks/arop_closed_loop/benchmark.prom`.
+
+Open Grafana and use the provisioned dashboard:
+
+```text
+NeuroSwarm / NeuroSwarm Benchmark Scoreboard
+```
+
+Useful checks:
+
+```promql
+neuroswarm_benchmark_closed_loop_score
+neuroswarm_benchmark_scenario_pass_rate
+neuroswarm_benchmark_scenario_pass
+```

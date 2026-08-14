@@ -345,18 +345,17 @@ class AgentGateway:
                     chat_req = req.model_copy(update={"session_id": session_id, "messages": [system_msg] + msgs})
             response = engine.handle(
                 chat_req,
-            response = engine.handle(
-                req.model_copy(update={"session_id": session_id}),
                 tool_names,
                 **handle_kwargs,
             )
-        if self.kv_runtime is not None:
+        finally:
+            if self.kv_runtime is not None:
 
-            async def _ckpt() -> None:
-                assert self.kv_runtime is not None
-                await self.kv_runtime.checkpoint(session_id)
+                async def _ckpt() -> None:
+                    assert self.kv_runtime is not None
+                    await self.kv_runtime.checkpoint(session_id)
 
-            anyio.run(_ckpt)
+                anyio.run(_ckpt)
         metrics = dict(getattr(response, "metrics", None) or {})
         metrics["haoe_bypassed"] = 1
         metrics["haoe_fast_path"] = 1

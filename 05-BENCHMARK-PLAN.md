@@ -64,6 +64,33 @@ Key scripts:
 
 Publish copies under `docs/evidence/latest/` (gitignored raw dir: `benchmarks/results/`).
 
+### Closed-loop AROP benchmark
+
+Use this to prove the optimization loop itself, not only before/after numbers:
+
+```bash
+uv run python benchmarks/arop_closed_loop_suite.py
+# optional when gateway is running:
+uv run python benchmarks/arop_closed_loop_suite.py --gateway-url http://127.0.0.1:8000
+```
+
+Artifacts:
+
+| Artifact | Purpose |
+|---|---|
+| `work/benchmarks/arop_closed_loop/arop_closed_loop_report.json` | Machine-readable gate results and score |
+| `work/benchmarks/arop_closed_loop/arop_closed_loop_report.md` | Company-style scorecard for review/demo |
+
+What it validates:
+
+| Gate | Why it matters |
+|---|---|
+| Clean `source=apx` profile can trigger R1 | Real Performix evidence drives an ASCR knob proposal |
+| Contaminated profile skips tuning | Closed loop refuses unsafe/low-integrity evidence |
+| Governor overrun triggers R3 | RTG optimization is checked independently from ASCR |
+| Apply + recapture rollback path runs | A worse post-change metric restores the prior policy |
+| Missing Performix metric is fail-loud | No fake zero/default metric can produce a false optimization |
+
 ---
 
 ## Topology honesty
