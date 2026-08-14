@@ -54,29 +54,29 @@
     <rect width="800" height="600" class="main-card" />
     
     <!-- Header -->
-    <text x="40" y="40" class="label-row">OPTIMUZ &#183; AROP &#183; INTERACTIVE EXPLAINER</text>
-    <text x="40" y="85" class="main-title">Six pillars. One closed loop.</text>
-    <text x="40" y="115" class="subtitle">Click through each stage. Every number below is taken from the source code.</text>
+    <text x="40" y="40" font-size="12" font-weight="700" letter-spacing="0.1em" fill="#76b900">OPTIMUZ &#183; AROP &#183; INTERACTIVE EXPLAINER</text>
+    <text x="40" y="85" font-size="40" font-weight="800" letter-spacing="-0.02em" fill="#ffffff">Six pillars. One closed loop.</text>
+    <text x="40" y="115" font-size="17" fill="#888888">Click through each stage. Every number below is taken from the source code.</text>
     
     <!-- Tabs -->
     <g transform="translate(40, 140)">
       <rect x="0" y="0" width="95" height="32" class="tab-bg-active" />
-      <text x="47.5" y="17" class="tab-text-active">1 &#183; AROP</text>
+      <text x="47.5" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#000000">1 &#183; AROP</text>
       
       <rect x="105" y="0" width="95" height="32" class="tab-bg" />
-      <text x="152.5" y="17" class="tab-text">2 &#183; ASCR</text>
+      <text x="152.5" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">2 &#183; ASCR</text>
       
       <rect x="210" y="0" width="130" height="32" class="tab-bg" />
-      <text x="275" y="17" class="tab-text">3 &#183; MCP Router</text>
+      <text x="275" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">3 &#183; MCP Router</text>
       
       <rect x="350" y="0" width="110" height="32" class="tab-bg" />
-      <text x="405" y="17" class="tab-text">4 &#183; MAKS KV</text>
+      <text x="405" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">4 &#183; MAKS KV</text>
       
       <rect x="470" y="0" width="80" height="32" class="tab-bg" />
-      <text x="510" y="17" class="tab-text">5 &#183; RTG</text>
+      <text x="510" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">5 &#183; RTG</text>
       
       <rect x="560" y="0" width="80" height="32" class="tab-bg" />
-      <text x="600" y="17" class="tab-text">6 &#183; AQR</text>
+      <text x="600" y="17" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">6 &#183; AQR</text>
     </g>
     
     <!-- Diagram Panel -->
@@ -100,25 +100,25 @@
           <circle r="4" class="pulse-dot-feedback">
             <animateMotion dur="2.5s" repeatCount="indefinite" path="M 670 122 Q 670 200 395 200 Q 120 200 120 122" />
           </circle>
-          <text x="395" y="215" class="caption-text">policy update &#183; every N seconds, bypasses inference</text>
+          <text x="395" y="215" text-anchor="middle" font-size="11" font-style="italic" fill="#888888">policy update &#183; every N seconds, bypasses inference</text>
 
           <!-- Nodes -->
           <g transform="translate(120, 90)">
             <rect x="-90" y="-32" width="180" height="64" class="node-rect" />
-            <text y="-5" text-anchor="middle" class="node-title">MetricsBundle</text>
-            <text y="15" text-anchor="middle" class="node-subtitle">hotspots, simd, cascade</text>
+            <text y="-5" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">MetricsBundle</text>
+            <text y="15" text-anchor="middle" font-size="11" fill="#888888">hotspots, simd, cascade</text>
           </g>
 
           <g transform="translate(395, 90)">
             <rect x="-95" y="-32" width="190" height="64" class="node-rect" />
-            <text y="-5" text-anchor="middle" class="node-title">tuner.py</text>
-            <text y="15" text-anchor="middle" class="node-subtitle">decide(bundle, policy)</text>
+            <text y="-5" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">tuner.py</text>
+            <text y="15" text-anchor="middle" font-size="11" fill="#888888">decide(bundle, policy)</text>
           </g>
 
           <g transform="translate(670, 90)">
             <rect x="-90" y="-32" width="180" height="64" class="node-rect" />
-            <text y="-5" text-anchor="middle" class="node-title">PolicyState</text>
-            <text y="15" text-anchor="middle" class="node-subtitle">cascade_draft_k, etc.</text>
+            <text y="-5" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">PolicyState</text>
+            <text y="15" text-anchor="middle" font-size="11" fill="#888888">cascade_draft_k, etc.</text>
           </g>
       </g>
     </g>
@@ -126,12 +126,12 @@
     <!-- Controls -->
     <g transform="translate(40, 440)">
       <rect width="90" height="34" class="btn-primary" />
-      <path d="M 25 11 v 12 m 8 -12 v 12" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <text x="45" y="22" class="btn-text-primary">Pause</text>
+      <path d="M 20 11 v 12 m 8 -12 v 12" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="60" y="23" text-anchor="middle" font-size="14" font-weight="600" fill="#000000">Pause</text>
       
       <rect x="100" y="0" width="100" height="34" class="btn-secondary" />
       <path d="M 115 21 a 6 6 0 1 0 6 -6 m -4.5 1.5 L 115 15 m -2.5 -2.5 v 5 h 5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-      <text x="140" y="22" class="btn-text-secondary">Restart</text>
+      <text x="160" y="23" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">Restart</text>
     </g>
     
     <!-- Description -->
@@ -139,23 +139,25 @@
       <rect width="720" height="74" class="desc-box" />
       <rect width="3" height="74" class="desc-accent" rx="1.5" />
       
-      <text x="20" y="30" class="desc-text">
-        <tspan class="desc-strong">Stage 1.</tspan> The AROP engine actively tunes parameters based on live telemetry. It consumes a 
+      <text x="20" y="30" font-size="15" fill="#c0c0c0">
+        <tspan font-weight="700" fill="#ffffff">Stage 1.</tspan> The AROP engine actively tunes parameters based on live telemetry. It consumes a 
       </text>
-      <rect x="635" y="16" width="105" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
-      <text x="639" y="29" class="desc-code">MetricsBundle</text>
       
-      <text x="20" y="55" class="desc-text">
+      <rect x="635" y="16" width="105" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
+      <text x="639" y="29" font-family="monospace" font-size="13" fill="#e5e7eb">MetricsBundle</text>
+      
+      <text x="20" y="55" font-size="15" fill="#c0c0c0">
         and evaluates rules to adjust parameters, feeding back a 
       </text>
+      
       <rect x="440" y="41" width="85" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
-      <text x="444" y="54" class="desc-code">PolicyState</text>
-      <text x="530" y="55" class="desc-text">.</text>
+      <text x="444" y="54" font-family="monospace" font-size="13" fill="#e5e7eb">PolicyState</text>
+      <text x="530" y="55" font-size="15" fill="#c0c0c0">.</text>
     </g>
     
     <!-- Footer -->
     <path d="M 40 560 L 760 560" class="footer-line" />
-    <text x="40" y="580" class="footer-text">Source: <tspan class="footer-source">neuroswarm_arm/arop/tuner.py</tspan></text>
-    <text x="760" y="580" class="footer-text" text-anchor="end">Status: confirmed from code</text>
+    <text x="40" y="580" font-size="12" fill="#888888">Source: <tspan font-family="monospace" fill="#a0a0a0">neuroswarm_arm/arop/tuner.py</tspan></text>
+    <text x="760" y="580" text-anchor="end" font-size="12" fill="#888888">Status: confirmed from code</text>
   </g>
 </svg>

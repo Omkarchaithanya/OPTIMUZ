@@ -231,7 +231,7 @@ We have built a fully interactive, self-contained architecture explainer documen
 
 **[👉 View the Interactive Explainer on GitHub Pages](https://omkarchaithanya.github.io/Neuroswarm/docs/explainer/index.html)**
 
-![](docs/explainer/preview.svg)
+![](docs/explainer/preview.svg?v=2)
 
 ### 1. Closed-Loop Optimization (AROP)
 Driven by `neuroswarm_arm/arop/tuner.py`, using `MetricsBundle` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
