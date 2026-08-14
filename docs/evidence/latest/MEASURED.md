@@ -1,6 +1,12 @@
 # Measured (Axion suite `20260803-1321`)
 
+<<<<<<< Updated upstream
 Sources: [`BENCHMARKS.md`](../BENCHMARKS.md) ← `benchmarks/results/axion-20260803-1321/SUMMARY.json` + published copies under `docs/evidence/latest/` and `docs/evidence/performix/`.
+=======
+**Full before/after table:** [`../BENCHMARKS.md`](../BENCHMARKS.md)
+
+Sources: `docs/evidence/latest/run_all.json` (2026-07-18) + live layer verify 2026-07-21 (`docs/evidence/latest/layer-verify/` + [`LAYER_SCORECARD.md`](LAYER_SCORECARD.md)).
+>>>>>>> Stashed changes
 
 | Metric | Measured | Notes |
 |---|---|---|

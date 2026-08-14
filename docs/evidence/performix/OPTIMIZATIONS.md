@@ -26,6 +26,8 @@ Hotspots say wall-clock is spent inside **Kleidi CPU kernels**, not the gateway 
 2. **Cascade Q4_0 GGUFs + cpusets** on 8 vCPU — keep work on the hot `libggml-cpu` path without oversubscription; no fantasy multi-quant fleet or runtime GGUF swap.
 3. **AROP / ASCR knobs** (draft length, accept/escalate thresholds) — reduce wasted verify when IPC/hotspot pressure is high; rule-based only (ADR 0005 — not PPO).
 4. **Single Compose scrape topology** — post dual-stack fix so Prometheus/`nexus_performix_*` gauges reflect one gateway job (see `screenshots/`).
+5. **OpenMP** — `OMP_PROC_BIND=close`, tier threads 2/3/3, `OMP_WAIT_POLICY=passive` (libomp share under decode is expected; see `SYMBOLS.md`).
+6. **Symbol helper** — `bash scripts/performix-host-libs.sh tier3` copies unstripped libs for neoprof; named `ggml_*` may still stay Unknown (container DWARF limit).
 
 ## Before / after (Instruction Mix)
 

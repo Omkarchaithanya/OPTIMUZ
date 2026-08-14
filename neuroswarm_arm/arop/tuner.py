@@ -8,6 +8,7 @@ from typing import Any
 
 from neuroswarm_arm.arop.metrics_parser import MetricsBundle
 from neuroswarm_arm.arop.policy_state import (
+    CLAMP_ACCEPT,
     CLAMP_DRAFT_K,
     CLAMP_GOVERNOR,
     PolicyState,
@@ -58,10 +59,17 @@ def _metrics_snapshot(bundle: MetricsBundle) -> dict[str, Any]:
     return out
 
 
-def decide(bundle: MetricsBundle, policy: PolicyState) -> Decision:
-    """Evaluate rules in order R0 → R1 → R2 → R3. First match wins; one param max."""
+def decide(
+    bundle: MetricsBundle,
+    policy: PolicyState,
+    *,
+    baseline_tok_s: float | None = None,
+) -> Decision:
+    """Evaluate rules in order R0 → R1 → R2 → R3 → R4. First match wins; one param max."""
     snap = _metrics_snapshot(bundle)
     clamped = policy.clamp()
+    if baseline_tok_s is not None:
+        snap["baseline_tok_s"] = float(baseline_tok_s)
 
     # R0 — contamination gate (Proposal A)
     if bundle.hotspots is None:
@@ -195,6 +203,49 @@ def decide(bundle: MetricsBundle, policy: PolicyState) -> Decision:
                 metrics_used=snap,
             )
 
+    # R4 — Option A: tok/s vs baseline → nudge accept_threshold (±0.05, clamped)
+    # Lower threshold when throughput is strong; raise when degraded. No GGUF swap.
+    if (
+        baseline_tok_s is not None
+        and baseline_tok_s > 0
+        and bundle.throughput is not None
+    ):
+        tok = float(bundle.throughput.predicted_tokens_seconds)
+        ratio = tok / float(baseline_tok_s)
+        snap["tok_s"] = tok
+        snap["tok_s_ratio"] = ratio
+        before = clamped.tier_escalation_confidence
+        if ratio > 0.95:
+            after = max(CLAMP_ACCEPT[0], min(CLAMP_ACCEPT[1], before - 0.05))
+            if after != before:
+                return Decision(
+                    action="change",
+                    param="tier_escalation_confidence",
+                    before=before,
+                    after=after,
+                    rule_id="R4",
+                    rationale=(
+                        f"tok/s={tok:.3f} > 95% of baseline={baseline_tok_s:.3f} "
+                        f"(ratio={ratio:.3f}) → lower accept_threshold {before}→{after}"
+                    ),
+                    metrics_used=snap,
+                )
+        elif ratio < 0.80:
+            after = max(CLAMP_ACCEPT[0], min(CLAMP_ACCEPT[1], before + 0.05))
+            if after != before:
+                return Decision(
+                    action="change",
+                    param="tier_escalation_confidence",
+                    before=before,
+                    after=after,
+                    rule_id="R4",
+                    rationale=(
+                        f"tok/s={tok:.3f} < 80% of baseline={baseline_tok_s:.3f} "
+                        f"(ratio={ratio:.3f}) → raise accept_threshold {before}→{after}"
+                    ),
+                    metrics_used=snap,
+                )
+
     return Decision(
         action="hold",
         param=None,
@@ -221,3 +272,17 @@ def apply_decision(policy: PolicyState, decision: Decision) -> PolicyState:
         LOG.warning("unknown param %s — leaving policy unchanged", decision.param)
         return policy.copy()
     return new.clamp()
+
+
+def recommend_quant_preference(
+    *,
+    ggml_sample_share: float,
+    hot_decode_pct: float = 50.0,
+) -> str | None:
+    """Policy bias only for CostRouter/AQR — never recommends GGUF file swaps.
+
+    When decode is ggml-dominated, prefer existing Q4_0 containers.
+    """
+    if ggml_sample_share > hot_decode_pct:
+        return "Q4_0"
+    return None

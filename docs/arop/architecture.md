@@ -71,6 +71,27 @@ Evolution path is closed for **rule + Performix** knobs:
 2. `ASCRDeploymentAdapter` → `ASCREngine.apply_rl_action` updates live thresholds.
 3. `AQRDeploymentAdapter` biases `AQRQuantConnector` preference + `CostRouter` tier floor (`cascade_tier_bias`) — **policy bias only**, no GGUF path swap.
 4. Optional `NSA_AROP_LOOP=1` runs `run_once` on an asyncio background task; `auto_promote` remains off.
+5. Manual promote: `POST /arop/promote` calls `DeploymentEngine.promote_canary()` (canary → 100% active).
+
+### Option A canary flow
+
+```
+run_once → validate/safety → deploy_canary(~5%) → monitor
+                 ↓
+         POST /arop/promote  (operator)
+                 ↓
+         canary policy becomes active; canary slot cleared
+```
+
+- Default canary share: `NSA_AROP_CANARY_PCT=5` (Option A).
+- `NSA_AROP_AUTO_PROMOTE=0` — never auto-promote in the Axion demo path.
+- Rollback: `POST /arop/rollback`.
+
+### v1 CLI tok/s rule (R4)
+
+[`neuroswarm_arm/arop/tuner.py`](../../neuroswarm_arm/arop/tuner.py): if `baseline_tok_s` is supplied and live tok/s &gt; 95% of baseline → lower `tier_escalation_confidence` by 0.05; if &lt; 80% → raise by 0.05 (clamped). Quant changes are **preference bias only** (`recommend_quant_preference` → existing Q4_0 containers via CostRouter/AQR — no GGUF path rewrite).
+
+Performix GUI zip: [`neuroswarm_arm/arop/performix_zip.py`](../../neuroswarm_arm/arop/performix_zip.py) parses `functions-capture-periodic_sampling.csv` + `metadata.json`; falls back to ggml sample-share vs baseline when tok/s is absent.
 
 Still out of scope: PPO / GRPO, GEPA numeric knobs, runtime weight swaps. See [ADR 0005](adr/0005-rule-based-closed-loop-not-rl.md).
 

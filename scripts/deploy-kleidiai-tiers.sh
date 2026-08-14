@@ -99,6 +99,8 @@ if grep -q 'ggml-org/llama.cpp' "$PROOF_DIR/docker-compose-ps.txt"; then
 fi
 
 echo "PASS: KleidiAI tiers deployed"
+echo "HINT: for Performix named symbols, run: bash scripts/performix-host-libs.sh tier3"
+echo "      then re-attach Code Hotspots under chat load (60s+). See docs/evidence/performix/SYMBOLS.md"
 if [[ "$RECAPTURE" == "1" ]]; then
   PROJECT_ROOT="$ROOT" bash scripts/capture-evidence.sh
 fi

@@ -112,6 +112,7 @@ services:
       OMP_NUM_THREADS: "${TIER1_THREADS:-2}"
       OMP_PROC_BIND: ${OMP_PROC_BIND:-close}
       OMP_PLACES: ${OMP_PLACES:-cores}
+      OMP_WAIT_POLICY: ${OMP_WAIT_POLICY:-passive}
     command:
       - -m
       - /models/xLAM-2-1B-fc-r-Q4_0.gguf
@@ -227,6 +228,7 @@ services:
       OMP_NUM_THREADS: "${TIER2_THREADS:-3}"
       OMP_PROC_BIND: ${OMP_PROC_BIND:-close}
       OMP_PLACES: ${OMP_PLACES:-cores}
+      OMP_WAIT_POLICY: ${OMP_WAIT_POLICY:-passive}
     command:
       - -m
       - /models/xLAM-2-3B-fc-r-Q4_0.gguf
@@ -280,6 +282,7 @@ services:
       OMP_NUM_THREADS: "${TIER3_THREADS:-3}"
       OMP_PROC_BIND: ${OMP_PROC_BIND:-close}
       OMP_PLACES: ${OMP_PLACES:-cores}
+      OMP_WAIT_POLICY: ${OMP_WAIT_POLICY:-passive}
     command:
       - -m
       - /models/${TIER3_MODEL:-DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf}

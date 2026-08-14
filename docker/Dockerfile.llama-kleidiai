@@ -21,8 +21,8 @@ RUN cmake -B build \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_C_FLAGS="-fno-omit-frame-pointer -g" \
-        -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -g" \
+        -DCMAKE_C_FLAGS="-fno-omit-frame-pointer -g -Wl,--build-id=sha1" \
+        -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -g -Wl,--build-id=sha1" \
         -DGGML_CPU_KLEIDIAI=ON \
         -DGGML_NATIVE=ON \
         -DGGML_OPENMP=ON \

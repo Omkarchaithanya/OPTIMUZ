@@ -81,6 +81,29 @@ class DeploymentEngine(DeploymentController):
             details=details,
         )
 
+    def promote_canary(self) -> DeploymentResult:
+        """Promote the current canary policy to 100% active (Option A)."""
+        canary = self.registry.canary()
+        if canary is None:
+            return DeploymentResult(
+                success=False,
+                mode=DeploymentMode.FULL,
+                active_policy_id=self.registry.active().id if self.registry.active() else None,
+                message="no canary policy to promote",
+            )
+        policy = self.registry.set_active(canary.id)
+        details = self._apply(policy, dry_run=False)
+        self.registry.clear_canary()
+        self.registry.clear_shadow()
+        return DeploymentResult(
+            success=True,
+            mode=DeploymentMode.FULL,
+            active_policy_id=policy.id,
+            canary_percent=0.0,
+            message=f"promoted canary {policy.id} to active (100%)",
+            details=details,
+        )
+
     def rollback(self, *, to_policy: RuntimePolicy | None = None) -> DeploymentResult:
         target = to_policy
         active = self.registry.active()

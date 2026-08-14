@@ -76,6 +76,23 @@ def create_arop_router(runtime: AROPRuntime) -> APIRouter:
             "mode": rb.mode.value,
         }
 
+    @router.post("/promote")
+    def promote() -> dict[str, Any]:
+        """Promote canary → 100% active (manual Option A gate; auto_promote stays off)."""
+        dep = runtime.optimizer.deployment
+        if hasattr(dep, "promote_canary"):
+            result = dep.promote_canary()
+        else:
+            raise HTTPException(status_code=503, detail="promote_canary unavailable")
+        return {
+            "success": result.success,
+            "active_policy_id": result.active_policy_id,
+            "message": result.message,
+            "mode": result.mode.value,
+            "canary_percent": result.canary_percent,
+            "details": dict(result.details or {}),
+        }
+
     @router.get("/events")
     def events() -> dict[str, Any]:
         return {
