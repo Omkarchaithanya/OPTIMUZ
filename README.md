@@ -7,9 +7,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Omkarchaithanya/Neuroswarm">
-    <img src="https://img.shields.io/badge/Architecture-ARM64-FF9900?style=for-the-badge&logo=arm&logoColor=white" alt="ARM64 Architecture">
-  </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+">
   </a>
@@ -84,16 +81,6 @@
 
 ---
 
-## How We Score Against the Judging Rubric
-
-| Judging Criterion | Weight | Where We Hit It | Evidence Location |
-|---|---|---|---|
-| **Technological Implementation** | **40 pts** | Six distinct Arm-native optimizations with measured deltas; KleidiAI + SVE2 BF16 kernel paths; NUMA topology awareness; Performix flame-graph validation | [`benchmarks/`](./benchmarks), [`docs/technical/`](./docs/technical) |
-| **"WOW" Factor** | **25 pts** | First open-source agent runtime to combine semantic MCP routing + CPU-CPU speculative cascade + reasoning-token governance on Arm; 95% cost reduction demo | [Demo Video](#demo-video), [`docs/demo/`](./docs/demo) |
-| **Potential Impact** | **20 pts** | 9 reusable artifacts: optimized GGUFs, migration templates, Helm charts, benchmark suite, Performix recipes, MCP server templates, quantization configs | [`artifacts/`](./artifacts), [`templates/`](./templates) |
-| **UX / Developer Experience** | **15 pts** | One-command deploy on GCP Axion; 10-minute reproducibility from `git clone` to benchmark; OpenAPI-compatible gateway | [Quick Start](#quick-start--reproduce-in-10-minutes) |
-
-
 ## Interactive Architecture Explainer
 
 We have built a fully interactive, self-contained architecture explainer documenting the 6 core pillars of Neuroswarm's design.
@@ -120,6 +107,14 @@ Driven by `neuroswarm_arm/governor.py`, dynamically capping Chain-of-Thought out
 Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`agent_role` and `workload_class`) to precision formats (like `Q5_K_M` or `Q4_0`) to balance reasoning quality against execution latency.
 
 ---
+
+## 📺 Demo Video
+
+<a href="https://youtu.be/kGejAdcynPs">
+  <img src="https://img.youtube.com/vi/kGejAdcynPs/0.jpg" alt="OPTIMUZ Arm AI Optimization Demo" width="600">
+</a>
+
+*Click the thumbnail above to watch the 3-minute demo on YouTube.*
 
 ---
 
