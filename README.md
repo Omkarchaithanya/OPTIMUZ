@@ -58,9 +58,6 @@
 
 > This project was built for the **Arm AI Optimization Challenge 2026 — Cloud AI Track**. Every optimization is reproducible, benchmarked with Arm Performix, and packaged as reusable artifacts for the Arm developer community.
 
-
-[Implementation Plan](04-IMPLEMENTATION-PLAN.md) Â· [Benchmarks](BENCHMARKS.md) Â· [Problem Statement](01-PROBLEM-STATEMENT.md)
-
 ---
 
 ## The Crisis This Solves
