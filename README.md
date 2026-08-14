@@ -225,6 +225,34 @@
 
 ---
 
+## Interactive Architecture Explainer
+
+We have built a fully interactive, self-contained architecture explainer documenting the 6 core pillars of Neuroswarm's design.
+
+**[👉 View the Interactive Explainer on GitHub Pages](https://omkarchaithanya.github.io/Neuroswarm/docs/explainer/index.html)**
+
+![](docs/explainer/preview.svg)
+
+### 1. Closed-Loop Optimization (AROP)
+Driven by `neuroswarm_arm/arop/tuner.py`, using `MetricsBundle` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
+
+### 2. Speculative Cascade (ASCR)
+Driven by `neuroswarm_arm/runtime/dipa/speculative/engine.py`, masking tool-call latency by predicting tool calls (B2) and running `executor.speculate(pred)` (B3) in parallel with cascade generation.
+
+### 3. Semantic MCP Router
+Driven by `neuroswarm_arm/tools/semantic_mcp_router.py` (TurboVec ANN), evaluating incoming queries alongside a `RouteContext` to route to the most relevant tools efficiently without bloating the LLM context window.
+
+### 4. CXL-Aware KV Cache (MAKS)
+Driven by `neuroswarm_arm/runtime/okf_slot_affinity.py` (`OkfSlotAffinity`), tracking `okf_block_hashes` and mapping them to a specific `id_slot` for zero-copy KV cache reuse across inference requests.
+
+### 5. Reasoning-Token Governor (RTG)
+Driven by `neuroswarm_arm/governor.py`, dynamically capping Chain-of-Thought output via a computed `thinking_token_cap` and `system_prompt` derived from `PlanState` signals (like `slo_remaining_ms` and `tool_confidence_top1`).
+
+### 6. Adaptive Quantization (AQR)
+Driven by `neuroswarm_arm/aqr.py` (`pick_quant`), matching workload profiles (`agent_role` and `workload_class`) to precision formats (like `Q5_K_M` or `Q4_0`) to balance reasoning quality against execution latency.
+
+---
+
 ## The Optimuz Architecture
 
 <div align="center">

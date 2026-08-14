@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuroswarm Architecture Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f1115;
+      --bg-panel: #1a1c23;
+      --accent-green: #76b900;
+      --text-main: #f0f0f0;
+      --text-muted: #9ca3af;
+      --border-color: #374151;
+      --tab-bg: #2d313b;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .tab-btn {
+      background-color: var(--tab-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+    }
+    .tab-btn:hover {
+      background-color: #3b404d;
+      color: var(--text-main);
+    }
+    .tab-btn.active {
+      background-color: rgba(118, 185, 0, 0.1);
+      color: var(--accent-green);
+      border-color: var(--accent-green);
+    }
+    .status-tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .status-live {
+      background-color: rgba(118, 185, 0, 0.2);
+      color: var(--accent-green);
+    }
+    .status-design {
+      background-color: rgba(234, 179, 8, 0.2);
+      color: #eab308;
+    }
+    
+    .diagram-panel {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .diagram-svg {
+      width: 100%;
+      height: 100%;
+      max-width: 800px;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    
+    .btn-play-pause {
+      background-color: var(--accent-green);
+      color: #000;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.2s;
+    }
+    .btn-play-pause:hover {
+      opacity: 0.9;
+    }
+    
+    .description-panel {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      line-height: 1.6;
+    }
+    .description-panel h3 {
+      margin-top: 0;
+      color: var(--accent-green);
+      font-size: 1.25rem;
+    }
+    .description-panel p {
+      margin-bottom: 0;
+      color: #d1d5db;
+    }
+    code {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.15rem 0.3rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+      color: #e5e7eb;
+    }
+
+    /* SVG Styles */
+    .node-rect {
+      fill: #252833;
+      stroke: var(--border-color);
+      stroke-width: 2;
+      rx: 8;
+    }
+    .node-text {
+      fill: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .node-subtext {
+      fill: var(--text-muted);
+      font-family: monospace;
+      font-size: 11px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .edge-path {
+      fill: none;
+      stroke: var(--border-color);
+      stroke-width: 2;
+    }
+    .pulse-dot {
+      fill: var(--accent-green);
+      filter: drop-shadow(0 0 4px var(--accent-green));
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Neuroswarm Architecture</h1>
+    </div>
+    
+    <div class="tabs" id="tabs-container">
+      <!-- Tabs generated by JS -->
+    </div>
+    
+    <div class="diagram-panel">
+      <svg class="diagram-svg" id="diagram-svg" viewBox="0 0 800 350" preserveAspectRatio="xMidYMid meet">
+        <!-- SVG content generated by JS -->
+      </svg>
+    </div>
+    
+    <div class="controls">
+      <button class="btn-play-pause" id="play-pause-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+        <span id="play-pause-text">Pause Animation</span>
+      </button>
+    </div>
+    
+    <div class="description-panel">
+      <h3 id="desc-title">Select a Pillar</h3>
+      <p id="desc-text"></p>
+    </div>
+  </div>
+
+  <script>
+    const pillars = [
+      {
+        id: "arop",
+        title: "Closed-Loop Optimization (AROP)",
+        status: "Live in Code",
+        description: "The <strong>AROP</strong> (Autonomous Runtime Optimization Policy) engine actively tunes parameters based on live telemetry. In <code>neuroswarm_arm/arop/tuner.py</code>, it consumes a <code>MetricsBundle</code> and evaluates rules (R0-R3) to adjust parameters like <code>cascade_draft_k</code> (based on <code>tier1_hit_rate</code>) and <code>governor_thinking_cap</code>. The resulting <code>PolicyState</code> is clamped and fed back into the runtime.",
+        diagram: {
+          nodes: [
+            { id: "metrics", label: "MetricsBundle", sub: "(hotspots, simd, cascade)", x: 100, y: 175, w: 160, h: 60 },
+            { id: "tuner", label: "tuner.py", sub: "decide(bundle, policy)", x: 400, y: 175, w: 180, h: 60 },
+            { id: "policy", label: "PolicyState", sub: "(cascade_draft_k, etc.)", x: 700, y: 175, w: 160, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 180 175 L 310 175", source: "metrics", target: "tuner" },
+            { id: "e2", path: "M 490 175 L 620 175", source: "tuner", target: "policy" },
+            { id: "e3", path: "M 700 205 Q 700 280 400 280 Q 100 280 100 205", source: "policy", target: "metrics", dash: true }
+          ]
+        }
+      },
+      {
+        id: "ascr",
+        title: "Speculative Cascade (ASCR)",
+        status: "Live in Code",
+        description: "The <strong>ASCR</strong> engine (<code>neuroswarm_arm/runtime/dipa/speculative/engine.py</code>) masks tool-call latency using speculative decoding principles. When a <code>ChatRequest</code> arrives, it concurrently triggers the <code>FakePredictor</code> (B2) and the normal cascade. High-confidence predictions dispatch an <code>executor.speculate(pred)</code>. If the LLM generates a matching tool call, the cached output is injected immediately, logging a <code>neuroswarm_tool_spec_hit_total</code>.",
+        diagram: {
+          nodes: [
+            { id: "req", label: "ChatRequest", sub: "(User Message)", x: 100, y: 175, w: 140, h: 60 },
+            { id: "pred", label: "ToolPredictor", sub: "predict(messages)", x: 350, y: 100, w: 160, h: 60 },
+            { id: "casc", label: "Cascade", sub: "generate(req)", x: 350, y: 250, w: 160, h: 60 },
+            { id: "exec", label: "SpeculativeExecutor", sub: "speculate(pred)", x: 650, y: 175, w: 180, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 170 175 C 220 175 220 100 270 100", source: "req", target: "pred" },
+            { id: "e2", path: "M 170 175 C 220 175 220 250 270 250", source: "req", target: "casc" },
+            { id: "e3", path: "M 430 100 C 500 100 500 175 560 175", source: "pred", target: "exec" },
+            { id: "e4", path: "M 430 250 C 500 250 500 175 560 175", source: "casc", target: "exec", dash: true }
+          ]
+        }
+      },
+      {
+        id: "mcp",
+        title: "Semantic MCP Router",
+        status: "Live in Code",
+        description: "The <strong>Semantic Tool Router</strong> (<code>neuroswarm_arm/tools/semantic_mcp_router.py</code>) implements Pillar 2. It evaluates a <code>query</code> alongside a <code>RouteContext</code> (tracking <code>memory_pressure</code>, <code>budget_remaining_usd</code>, etc.). It uses a TurboVec ANN index (defaulting to <code>nomic-embed-text-v1.5</code>) to return a <code>RoutingResult</code> of highly relevant <code>ToolDef</code>s, keeping the context window lean.",
+        diagram: {
+          nodes: [
+            { id: "in", label: "Query + RouteContext", sub: "(budget, latency_slo)", x: 150, y: 175, w: 180, h: 60 },
+            { id: "ann", label: "TurboVec ANN", sub: "nomic-embed-text", x: 400, y: 175, w: 160, h: 60 },
+            { id: "out", label: "RoutingResult", sub: "[ToolDef, ToolDef]", x: 650, y: 175, w: 160, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 240 175 L 320 175", source: "in", target: "ann" },
+            { id: "e2", path: "M 480 175 L 570 175", source: "ann", target: "out" }
+          ]
+        }
+      },
+      {
+        id: "maks",
+        title: "CXL-Aware KV Cache (MAKS)",
+        status: "Live in Code",
+        description: "The <strong>MAKS</strong> (Memory-Aware KV Scheduling) system operates via <code>neuroswarm_arm/runtime/okf_slot_affinity.py</code>. The <code>OkfSlotAffinity</code> class maintains an LRU map tying <code>okf_block_hashes</code> to a specific Llama server <code>id_slot</code>. This affinity routing enables zero-copy KV cache reuse across distributed or CXL-attached memory instances.",
+        diagram: {
+          nodes: [
+            { id: "req", label: "Request Baggage", sub: "(okf_block_hashes)", x: 150, y: 175, w: 160, h: 60 },
+            { id: "aff", label: "OkfSlotAffinity", sub: "lookup(hashes)", x: 400, y: 175, w: 160, h: 60 },
+            { id: "slot", label: "LlamaCppBackend", sub: "id_slot = 4", x: 650, y: 175, w: 160, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 230 175 L 320 175", source: "req", target: "aff" },
+            { id: "e2", path: "M 480 175 L 570 175", source: "aff", target: "slot" }
+          ]
+        }
+      },
+      {
+        id: "rtg",
+        title: "Reasoning-Token Governor (RTG)",
+        status: "Live in Code",
+        description: "The <strong>Reasoning-Token Governor</strong> (<code>neuroswarm_arm/governor.py</code>) dynamically bounds Chain-of-Thought output. It evaluates a <code>PlanState</code>, incorporating signals like <code>slo_remaining_ms</code> and <code>tool_confidence_top1</code>. The governor outputs a <code>thinking_token_cap</code> and a dynamic <code>system_prompt</code> to force the model to commit to a tool call before exhausting its compute budget.",
+        diagram: {
+          nodes: [
+            { id: "plan", label: "PlanState", sub: "(slo, confidence)", x: 150, y: 175, w: 160, h: 60 },
+            { id: "gov", label: "RTGRuntime", sub: "cap(plan)", x: 400, y: 175, w: 160, h: 60 },
+            { id: "out", label: "System Prompt", sub: "thinking_token_cap", x: 650, y: 175, w: 160, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 230 175 L 320 175", source: "plan", target: "gov" },
+            { id: "e2", path: "M 480 175 L 570 175", source: "gov", target: "out" }
+          ]
+        }
+      },
+      {
+        id: "aqr",
+        title: "Adaptive Quantization (AQR)",
+        status: "Live in Code",
+        description: "The <strong>Adaptive Quantization Router</strong> (<code>neuroswarm_arm/aqr.py</code>) matches workload profiles to precision formats. Using the <code>pick_quant_primary</code> function, it evaluates the <code>agent_role</code> and <code>workload_class</code> (e.g., 'reasoning' vs 'tool_call') to dynamically route prompts to models running in <code>Q5_K_M</code>, <code>Q4_0</code>, or other quantizations, balancing quality with inference cost.",
+        diagram: {
+          nodes: [
+            { id: "in", label: "Workload Profile", sub: "(agent_role)", x: 150, y: 175, w: 160, h: 60 },
+            { id: "aqr", label: "AQR Router", sub: "pick_quant()", x: 400, y: 175, w: 160, h: 60 },
+            { id: "out", label: "Quant Format", sub: "e.g. Q5_K_M", x: 650, y: 175, w: 160, h: 60 }
+          ],
+          edges: [
+            { id: "e1", path: "M 230 175 L 320 175", source: "in", target: "aqr" },
+            { id: "e2", path: "M 480 175 L 570 175", source: "aqr", target: "out" }
+          ]
+        }
+      }
+    ];
+
+    let currentPillarId = "arop";
+    let isPlaying = true;
+    let svgAnimations = [];
+
+    function renderTabs() {
+      const container = document.getElementById("tabs-container");
+      container.innerHTML = "";
+      
+      pillars.forEach(p => {
+        const btn = document.createElement("button");
+        btn.className = `tab-btn ${p.id === currentPillarId ? 'active' : ''}`;
+        
+        const statusClass = p.status === "Live in Code" ? "status-live" : "status-design";
+        btn.innerHTML = `${p.title} <span class="status-tag ${statusClass}">${p.status}</span>`;
+        
+        btn.onclick = () => selectPillar(p.id);
+        container.appendChild(btn);
+      });
+    }
+
+    function renderDiagram(pillarId) {
+      const pillar = pillars.find(p => p.id === pillarId);
+      const svg = document.getElementById("diagram-svg");
+      
+      let svgHtml = `
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#374151" />
+          </marker>
+        </defs>
+      `;
+      
+      // Draw edges
+      pillar.diagram.edges.forEach((edge, i) => {
+        const dashStyle = edge.dash ? 'stroke-dasharray="6,6"' : '';
+        svgHtml += `<path id="path-${i}" d="${edge.path}" class="edge-path" marker-end="url(#arrowhead)" ${dashStyle} />`;
+        
+        // Add animated pulse
+        svgHtml += `
+          <circle r="4" class="pulse-dot">
+            <animateMotion dur="2.5s" repeatCount="indefinite" path="${edge.path}">
+              <mpath href="#path-${i}" />
+            </animateMotion>
+          </circle>
+        `;
+      });
+      
+      // Draw nodes
+      pillar.diagram.nodes.forEach(node => {
+        svgHtml += `
+          <g transform="translate(${node.x}, ${node.y})">
+            <rect x="${-node.w/2}" y="${-node.h/2}" width="${node.w}" height="${node.h}" class="node-rect" />
+            <text y="-5" class="node-text">${node.label}</text>
+            <text y="15" class="node-subtext">${node.sub}</text>
+          </g>
+        `;
+      });
+      
+      svg.innerHTML = svgHtml;
+      
+      // Apply current play/pause state
+      if (!isPlaying) {
+        svg.pauseAnimations();
+      }
+    }
+
+    function updateContent(pillarId) {
+      const pillar = pillars.find(p => p.id === pillarId);
+      document.getElementById("desc-title").innerText = pillar.title;
+      document.getElementById("desc-text").innerHTML = pillar.description;
+    }
+
+    function selectPillar(id) {
+      currentPillarId = id;
+      renderTabs();
+      renderDiagram(id);
+      updateContent(id);
+    }
+
+    document.getElementById("play-pause-btn").addEventListener("click", () => {
+      isPlaying = !isPlaying;
+      const svg = document.getElementById("diagram-svg");
+      const text = document.getElementById("play-pause-text");
+      const btn = document.getElementById("play-pause-btn");
+      
+      if (isPlaying) {
+        svg.unpauseAnimations();
+        text.innerText = "Pause Animation";
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> <span id="play-pause-text">Pause Animation</span>`;
+      } else {
+        svg.pauseAnimations();
+        text.innerText = "Play Animation";
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> <span id="play-pause-text">Play Animation</span>`;
+      }
+    });
+
+    // Initialize
+    selectPillar(currentPillarId);
+  </script>
+</body>
+</html>
