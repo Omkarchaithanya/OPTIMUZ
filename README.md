@@ -62,7 +62,7 @@
 
 ## The Crisis This Solves
 
-**Agentic AI on the cloud is broken.** Most of the $0.40â€“$2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
+**Agentic AI on the cloud is broken.** Most of the $0.40 - $2.00 per request is waste. Cloud agents waste money on unused MCP tool schemas, duplicated KV caches, excess reasoning tokens, and expensive GPU prices for memory-bound decode tasks. 
 
 **Optimuz fixes this** with a three-tier CPU-CPU speculative cascade (0.5B â†’ 3B â†’ 8B) on **KleidiAI-optimized llama.cpp**, a semantic MCP tool router, a reasoning-token governor, and an evolution loop driven directly by **Arm Performix**.
 
