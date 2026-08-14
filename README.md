@@ -434,41 +434,6 @@ Optimuz/
 
 ---
 
-## Getting Started (Local Axion MVP)
-
-Run the entire suite locally or on an Axion VM with incredible simplicity:
-
-```bash
-# Sync dependencies
-uv sync --all-groups
-
-# Setup environment variables
-cp .env.example .env   # Linux/macOS; on Windows: Copy-Item .env.example .env
-
-# Fire up the Optimuz platform
-docker compose up --build
-```
-
-The gateway listens natively on `http://VM_EXTERNAL_IP:8000`.
-
-### Health & Ready Checks
-```bash
-curl http://127.0.0.1:8000/health
-curl http://127.0.0.1:8000/ready
-curl http://127.0.0.1:8000/v1/tools/cache
-```
-
-### Example Chat Request
-```bash
-curl -s http://127.0.0.1:8000/v1/chat/completions \
-  -H 'Content-Type: application/json' \
-  -d '{"messages":[{"role":"user","content":"Plan a cost-optimized ARM inference demo."}],"max_tokens":256}'
-```
-
-*For repeatable GCP setup, refer to `docs/gcp-axion-setup.md` or use `scripts/bootstrap-gcp.ps1` and `scripts/bootstrap-vm.sh`. Initial dev target: `c4a-standard-8` with `hyperdisk-balanced`.*
-
----
-
 ## Quick Start — GCP Axion VM 
 
 ### 1. Provision & clone
