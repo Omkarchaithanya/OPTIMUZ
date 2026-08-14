@@ -229,14 +229,10 @@ We have built a fully interactive, self-contained architecture explainer documen
 
 **[👉 View the Interactive Explainer on GitHub Pages](https://omkarchaithanya.github.io/Neuroswarm/docs/explainer/index.html)**
 
-<<<<<<< HEAD
-![](docs/explainer/preview.svg)
-=======
-![](docs/explainer/preview.svg?v=3)
->>>>>>> cb867e8 (fix: replace MetricsBundle with ARM Performix and bump cache)
+![](docs/explainer/preview.svg?v=4)
 
 ### 1. Closed-Loop Optimization (AROP)
-Driven by `neuroswarm_arm/arop/tuner.py`, using `MetricsBundle` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
+Driven by `neuroswarm_arm/arop/tuner.py`, using `ARM Performix` to clamp parameters like `cascade_draft_k` and `governor_thinking_cap` based on live telemetry such as `tier1_hit_rate` and latency.
 
 ### 2. Speculative Cascade (ASCR)
 Driven by `neuroswarm_arm/runtime/dipa/speculative/engine.py`, masking tool-call latency by predicting tool calls (B2) and running `executor.speculate(pred)` (B3) in parallel with cascade generation.
