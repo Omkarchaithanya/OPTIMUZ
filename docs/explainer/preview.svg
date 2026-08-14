@@ -1,49 +1,154 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" preserveAspectRatio="xMidYMid meet" style="background-color: #0f1115; font-family: sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" preserveAspectRatio="xMidYMid meet" style="background-color: #000000; font-family: 'Inter', sans-serif;">
   <defs>
     <style>
-      .node-rect { fill: #252833; stroke: #374151; stroke-width: 2; rx: 8; }
-      .node-text { fill: #f0f0f0; font-size: 14px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
-      .node-subtext { fill: #9ca3af; font-family: monospace; font-size: 11px; text-anchor: middle; dominant-baseline: middle; }
-      .edge-path { fill: none; stroke: #374151; stroke-width: 2; }
-      .pulse-dot { fill: #76b900; filter: drop-shadow(0 0 4px #76b900); }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap');
+      
+      .main-card { fill: #0d0d0d; stroke: #2a2a2a; stroke-width: 1px; rx: 16px; }
+      
+      .label-row { fill: #76b900; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
+      .main-title { fill: #ffffff; font-size: 40px; font-weight: 800; letter-spacing: -0.02em; }
+      .subtitle { fill: #888888; font-size: 17px; }
+      
+      .tab-bg { fill: #1a1a1a; stroke: #2a2a2a; stroke-width: 1px; rx: 16px; }
+      .tab-bg-active { fill: #76b900; stroke: #76b900; stroke-width: 1px; rx: 16px; }
+      .tab-text { fill: #ffffff; font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+      .tab-text-active { fill: #000000; font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+      
+      .diagram-panel { fill: #111111; stroke: #2a2a2a; stroke-width: 1px; rx: 12px; }
+      
+      .node-rect { fill: #1a1a1a; stroke: #2a2a2a; stroke-width: 1.5; rx: 8; }
+      .node-title { fill: #ffffff; font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .node-subtitle { fill: #888888; font-size: 11px; text-anchor: middle; }
+      
+      .edge-forward { fill: none; stroke: #76b900; stroke-width: 2; }
+      .edge-feedback { fill: none; stroke: #6b7280; stroke-width: 2; stroke-dasharray: 6, 6; }
+      .pulse-dot-forward { fill: #76b900; filter: drop-shadow(0 0 4px #76b900); }
+      .pulse-dot-feedback { fill: #6b7280; filter: drop-shadow(0 0 4px #6b7280); }
+      .caption-text { fill: #888888; font-size: 11px; font-style: italic; text-anchor: middle; }
+      
+      .desc-box { fill: #1a1a1a; stroke: #2a2a2a; stroke-width: 1; rx: 6; }
+      .desc-accent { fill: #76b900; }
+      .desc-text { fill: #c0c0c0; font-size: 15px; }
+      .desc-strong { fill: #ffffff; font-weight: 700; }
+      .desc-code { fill: #e5e7eb; font-family: monospace; font-size: 13px; }
+      
+      .footer-text { fill: #888888; font-size: 12px; }
+      .footer-source { fill: #a0a0a0; font-family: monospace; }
+      .footer-line { stroke: #2a2a2a; stroke-width: 1; }
+      
+      .btn-primary { fill: #76b900; rx: 6; }
+      .btn-secondary { fill: none; stroke: #2a2a2a; stroke-width: 1; rx: 6; }
+      .btn-text-primary { fill: #000000; font-size: 14px; font-weight: 600; }
+      .btn-text-secondary { fill: #ffffff; font-size: 14px; font-weight: 600; }
     </style>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#374151" />
+    <marker id="arrow-forward" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#76b900" />
+    </marker>
+    <marker id="arrow-feedback" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280" />
     </marker>
   </defs>
 
-  <!-- Edges -->
-  <path id="path-0" d="M 180 175 L 310 175" class="edge-path" marker-end="url(#arrowhead)" />
-  <circle r="4" class="pulse-dot">
-    <animateMotion dur="2.5s" repeatCount="indefinite" path="M 180 175 L 310 175" />
-  </circle>
+  <!-- Container -->
+  <g transform="translate(50, 50)">
+    <rect width="800" height="600" class="main-card" />
+    
+    <!-- Header -->
+    <text x="40" y="40" class="label-row">OPTIMUZ &middot; AROP &middot; INTERACTIVE EXPLAINER</text>
+    <text x="40" y="85" class="main-title">Six pillars. One closed loop.</text>
+    <text x="40" y="115" class="subtitle">Click through each stage. Every number below is taken from the source code.</text>
+    
+    <!-- Tabs -->
+    <g transform="translate(40, 140)">
+      <rect x="0" y="0" width="95" height="32" class="tab-bg-active" />
+      <text x="47.5" y="17" class="tab-text-active">1 &middot; AROP</text>
+      
+      <rect x="105" y="0" width="95" height="32" class="tab-bg" />
+      <text x="152.5" y="17" class="tab-text">2 &middot; ASCR</text>
+      
+      <rect x="210" y="0" width="130" height="32" class="tab-bg" />
+      <text x="275" y="17" class="tab-text">3 &middot; MCP Router</text>
+      
+      <rect x="350" y="0" width="110" height="32" class="tab-bg" />
+      <text x="405" y="17" class="tab-text">4 &middot; MAKS KV</text>
+      
+      <rect x="470" y="0" width="80" height="32" class="tab-bg" />
+      <text x="510" y="17" class="tab-text">5 &middot; RTG</text>
+      
+      <rect x="560" y="0" width="80" height="32" class="tab-bg" />
+      <text x="600" y="17" class="tab-text">6 &middot; AQR</text>
+    </g>
+    
+    <!-- Diagram Panel -->
+    <g transform="translate(40, 190)">
+      <rect width="720" height="230" class="diagram-panel" />
+      
+      <!-- Diagram Content -->
+      <g transform="translate(20, 10)">
+          <!-- Edges -->
+          <path id="path-0" d="M 210 90 L 300 90" class="edge-forward" marker-end="url(#arrow-forward)" />
+          <circle r="4" class="pulse-dot-forward">
+            <animateMotion dur="2.5s" repeatCount="indefinite" path="M 210 90 L 300 90" />
+          </circle>
 
-  <path id="path-1" d="M 490 175 L 620 175" class="edge-path" marker-end="url(#arrowhead)" />
-  <circle r="4" class="pulse-dot">
-    <animateMotion dur="2.5s" repeatCount="indefinite" path="M 490 175 L 620 175" />
-  </circle>
+          <path id="path-1" d="M 490 90 L 580 90" class="edge-forward" marker-end="url(#arrow-forward)" />
+          <circle r="4" class="pulse-dot-forward">
+            <animateMotion dur="2.5s" repeatCount="indefinite" path="M 490 90 L 580 90" />
+          </circle>
 
-  <path id="path-2" d="M 700 205 Q 700 280 400 280 Q 100 280 100 205" class="edge-path" marker-end="url(#arrowhead)" stroke-dasharray="6,6" />
-  <circle r="4" class="pulse-dot">
-    <animateMotion dur="2.5s" repeatCount="indefinite" path="M 700 205 Q 700 280 400 280 Q 100 280 100 205" />
-  </circle>
+          <path id="path-2" d="M 670 122 Q 670 200 395 200 Q 120 200 120 122" class="edge-feedback" marker-end="url(#arrow-feedback)" />
+          <circle r="4" class="pulse-dot-feedback">
+            <animateMotion dur="2.5s" repeatCount="indefinite" path="M 670 122 Q 670 200 395 200 Q 120 200 120 122" />
+          </circle>
+          <text x="395" y="215" class="caption-text">policy update &middot; every N seconds, bypasses inference</text>
 
-  <!-- Nodes -->
-  <g transform="translate(100, 175)">
-    <rect x="-80" y="-30" width="160" height="60" class="node-rect" />
-    <text y="-5" class="node-text">MetricsBundle</text>
-    <text y="15" class="node-subtext">(hotspots, simd, cascade)</text>
-  </g>
+          <!-- Nodes -->
+          <g transform="translate(120, 90)">
+            <rect x="-90" y="-32" width="180" height="64" class="node-rect" />
+            <text y="-5" class="node-title">MetricsBundle</text>
+            <text y="15" class="node-subtitle">hotspots, simd, cascade</text>
+          </g>
 
-  <g transform="translate(400, 175)">
-    <rect x="-90" y="-30" width="180" height="60" class="node-rect" />
-    <text y="-5" class="node-text">tuner.py</text>
-    <text y="15" class="node-subtext">decide(bundle, policy)</text>
-  </g>
+          <g transform="translate(395, 90)">
+            <rect x="-95" y="-32" width="190" height="64" class="node-rect" />
+            <text y="-5" class="node-title">tuner.py</text>
+            <text y="15" class="node-subtitle">decide(bundle, policy)</text>
+          </g>
 
-  <g transform="translate(700, 175)">
-    <rect x="-80" y="-30" width="160" height="60" class="node-rect" />
-    <text y="-5" class="node-text">PolicyState</text>
-    <text y="15" class="node-subtext">(cascade_draft_k, etc.)</text>
+          <g transform="translate(670, 90)">
+            <rect x="-90" y="-32" width="180" height="64" class="node-rect" />
+            <text y="-5" class="node-title">PolicyState</text>
+            <text y="15" class="node-subtitle">cascade_draft_k, etc.</text>
+          </g>
+      </g>
+    </g>
+    
+    <!-- Controls -->
+    <g transform="translate(40, 440)">
+      <rect width="90" height="34" class="btn-primary" />
+      <path d="M 25 11 v 12 m 8 -12 v 12" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="45" y="22" class="btn-text-primary">Pause</text>
+      
+      <rect x="100" y="0" width="100" height="34" class="btn-secondary" />
+      <path d="M 115 21 a 6 6 0 1 0 6 -6 m -4.5 1.5 L 115 15 m -2.5 -2.5 v 5 h 5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="140" y="22" class="btn-text-secondary">Restart</text>
+    </g>
+    
+    <!-- Description -->
+    <g transform="translate(40, 490)">
+      <rect width="720" height="50" class="desc-box" />
+      <rect width="3" height="50" class="desc-accent" rx="1.5" />
+      
+      <text x="20" y="30" class="desc-text">
+        <tspan class="desc-strong">Stage 1.</tspan> The AROP engine tunes parameters based on live telemetry. It consumes a 
+      </text>
+      <rect x="618" y="16" width="92" height="18" fill="rgba(255,255,255,0.1)" rx="4" />
+      <text x="622" y="29" class="desc-code">MetricsBundle</text>
+    </g>
+    
+    <!-- Footer -->
+    <path d="M 40 560 L 760 560" class="footer-line" />
+    <text x="40" y="580" class="footer-text">Source: <tspan class="footer-source">neuroswarm_arm/arop/tuner.py</tspan></text>
+    <text x="760" y="580" class="footer-text" text-anchor="end">Status: confirmed from code</text>
   </g>
 </svg>
