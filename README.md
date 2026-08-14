@@ -98,7 +98,6 @@
 
 We have built a fully interactive, self-contained architecture explainer documenting the 6 core pillars of Neuroswarm's design.
 
-**[👉 View the Interactive Explainer on GitHub Pages](https://omkarchaithanya.github.io/OPTIMUZ/explainer/index.html)**
 
 [![Interactive Architecture Explainer](docs/explainer/preview.svg?v=5)](https://omkarchaithanya.github.io/OPTIMUZ/explainer/index.html)
 
