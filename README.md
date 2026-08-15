@@ -422,62 +422,163 @@ Optimuz/
 
 ---
 
-## Quick Start 
+## Quick Start — GCP Axion VM
 
-### 1. Provision & clone
+### 1. Provision VM & clone
 ```bash
-# On a GCP Axion VM (C4A ARM64, Ubuntu 22.04/24.04)
+# Provision a GCP Axion C4A ARM64 VM (Ubuntu 22.04/24.04, 8 vCPU / 32 GB RAM)
+# SSH into the VM, then clone the repository
 git clone https://github.com/Omkarchaithanya/OPTIMUZ.git
 cd OPTIMUZ
 ```
 
-### 2. Configure environment
+### 2. Install system dependencies
 ```bash
+# Update package lists
+sudo apt-get update
+
+# Install runtime dependencies: git, build tools, Docker, Docker Compose v2
+# Docker Compose v2 is required for --compatibility flag (maps deploy.resources to cgroup limits)
+sudo apt-get install -y git curl ca-certificates build-essential cmake clang \
+  libcurl4-openssl-dev docker.io docker-compose-v2
+
+# Add current user to docker group (logout/login or newgrp required)
+sudo usermod -aG docker "$USER"
+newgrp docker
+
+# Verify Docker Compose is available
+docker compose version
+```
+
+### 3. Configure environment
+```bash
+# Copy the example environment file
 cp .env.example .env
 
-# REQUIRED: set Grafana admin password (compose fails if empty)
+# REQUIRED: Set Grafana admin password — compose fails if empty
 sed -i 's/^GRAFANA_ADMIN_PASSWORD=.*/GRAFANA_ADMIN_PASSWORD=OptimuzJudge2026/' .env
+
+# REQUIRED: Set model directory (Axion VM uses /models for GGUF storage)
+sed -i 's|^MODEL_DIR=.*|MODEL_DIR=/models|' .env
+
+# Ensure KleidiAI image is enforced (never use stock llama.cpp for evidence)
+sed -i 's|^NSA_LLAMA_IMAGE=.*|NSA_LLAMA_IMAGE=nexus-arm/llama-kleidiai:server|' .env
+
+# Ensure Mem0 / hybrid reflection defaults exist
+grep -q '^NSA_MEM_PROVIDER=' .env || echo 'NSA_MEM_PROVIDER=mem0' >> .env
+grep -q '^NSA_MEM_STORE=' .env || echo 'NSA_MEM_STORE=/app/work/memory' >> .env
+grep -q '^NSA_MEM_QDRANT_PATH=' .env || echo 'NSA_MEM_QDRANT_PATH=/app/work/memory/qdrant' >> .env
+grep -q '^NSA_MEM_QDRANT_URL=' .env || echo 'NSA_MEM_QDRANT_URL=http://qdrant:6333' >> .env
+grep -q '^NSA_MEM_LLMA=' .env || echo 'NSA_MEM_LLMA=none' >> .env
+grep -q '^NSA_MEM_EMBEDDER=' .env || echo 'NSA_MEM_EMBEDDER=hash' >> .env
+grep -q '^NSA_AROP_REFLECTION=' .env || echo 'NSA_AROP_REFLECTION=hybrid' >> .env
+grep -q '^NSA_AROP_GEPA_LM=' .env || echo 'NSA_AROP_GEPA_LM=mock' >> .env
+grep -q '^NSA_ASCR_TEXT_AGREE=' .env || echo 'NSA_ASCR_TEXT_AGREE=1' >> .env
+grep -q '^NSA_LLAMA_N_PROBS=' .env || echo 'NSA_LLAMA_N_PROBS=0' >> .env
 ```
-For Windows (PowerShell): `Copy-Item .env.example .env` then edit `GRAFANA_ADMIN_PASSWORD` manually.
 
-### 3. Prepare models
-```bash
-mkdir -p models
+For Windows (PowerShell):
 
-wget -O models/Llama-3.2-1B-Instruct-Q4_0.gguf \
-  https://huggingface.co/TheBloke/Llama-3.2-1B-Instruct-GGUF/resolve/main/llama-3.2-1b-instruct.Q4_0.gguf
-
-# Register the model for Compose
-bash scripts/prepare-models.sh --demo-source models/Llama-3.2-1B-Instruct-Q4_0.gguf
+```powershell
+Copy-Item .env.example .env
+# Then manually edit GRAFANA_ADMIN_PASSWORD in .env
 ```
-For full cascade evidence (1.5B → 7B → 8B), place your licensed DeepSeek-R1 / xLAM GGUFs under `./models/` and run `bash scripts/ensure-compose-models.sh`.
 
-### 4. Launch the full stack
+### 4. Prepare models
 ```bash
-# Build KleidiAI-optimized llama.cpp tiers + gateway + observability stack
-docker compose up -d --build
+# Create model directory on VM
+sudo mkdir -p /models
+sudo chown "$USER:$USER" /models
+
+# Download the three tiered models for full CPU-CPU speculative cascade evidence
+# (Update URLs below to your actual HuggingFace / licensed source if different)
+
+wget -O /models/xLAM-2-1B-fc-r-Q4_0.gguf \
+  https://huggingface.co/TheBloke/xLAM-2-1B-fc-r-GGUF/resolve/main/xlam-2-1b-fc-r.Q4_0.gguf
+
+wget -O /models/xLAM-2-3B-fc-r-Q4_0.gguf \
+  https://huggingface.co/TheBloke/xLAM-2-3B-fc-r-GGUF/resolve/main/xlam-2-3b-fc-r.Q4_0.gguf
+
+wget -O /models/DeepSeek-R1-Distill-Qwen-7B-Q4_0.gguf \
+  https://huggingface.co/TheBloke/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/deepseek-r1-distill-qwen-7b.Q4_0.gguf
+
+# Register all three models for Compose — creates canonical symlinks and writes TIER3_MODEL to .env
+bash scripts/ensure-compose-models.sh
+bash scripts/prepare-models.sh --source-dir /models
 ```
-This starts: `gateway` (port 8000), `tier1`/`tier2`/`tier3`/`tier-spec` (llama.cpp + KleidiAI, ports 8081-8084), `prometheus` (9090), `grafana` (3000), `qdrant` (6333), `otel-collector` (4317/4318), `proxy` (80).
 
-### 5. Verify deployment health
+### 5. Build KleidiAI-optimized llama.cpp tiers
 ```bash
-# 1. All containers healthy?
+# This is OPTIMIZATION #1 — KleidiAI + SVE2 BF16 kernel acceleration.
+# Judges verify: docker compose ps must show 'llama-kleidiai', NOT 'ggml-org/llama.cpp'.
+# This build uses -march=armv8.2-a+sve2+bf16 flags exclusive to Arm Neoverse V2/V3.
+
+bash scripts/deploy-kleidiai-tiers.sh
+
+# The script automatically:
+#   - Builds nexus-arm/llama-kleidiai:server with GGML_CPU_KLEIDIAI=ON
+#   - Probes image strings for 'kleidiai' / 'i8mm' evidence
+#   - Forces NSA_LLAMA_IMAGE in .env
+#   - Recreates tier1/tier2/tier3 with the optimized image
+#   - Waits for gateway health
+```
+
+Optional — stock baseline for Performix A/B comparison:
+
+```bash
+STOCK_BASELINE=1 bash scripts/deploy-kleidiai-tiers.sh
+```
+
+### 6. Launch the full stack
+```bash
+# Fix CRLF line endings if synced from Windows
+find scripts -name '*.sh' -print0 2>/dev/null | xargs -0 -r sed -i 's/\r$//' || true
+
+# Free host :80 from k3s Traefik (if present) so Compose nginx can bind
+bash scripts/free-host-port80-for-compose.sh || true
+
+# Create working directories for evidence, memory, and performix
+mkdir -p work/performix work/swarm work/memory/qdrant work/arop/gepa
+
+# Launch the entire stack: gateway + tiers + prometheus + grafana + qdrant + otel + proxy
+# --compatibility ensures deploy.resources limits work on non-swarm Compose
+docker compose --compatibility up -d --build
+
+# Restart proxy to refresh upstream DNS after gateway recreate
+docker compose restart proxy 2>/dev/null || true
+bash scripts/free-host-port80-for-compose.sh || true
+```
+
+This starts: `gateway` (port 8000), `tier1`/`tier2`/`tier3`/`tier-spec` (llama.cpp + KleidiAI, ports 8081-8084), `prometheus` (9090), `grafana` (3000), `qdrant` (6333), `otel-collector` (4317/4318), and `proxy` (80).
+
+### 7. Verify deployment health
+```bash
+# 1. All containers running and healthy?
 docker compose ps
 
-# 2. Gateway health & readiness
+# 2. Gateway health & readiness (direct)
 curl -fsS http://127.0.0.1:8000/health
 curl -fsS http://127.0.0.1:8000/ready
 
-# 3. Prometheus scraping the gateway?
+# 3. Proxy health (public entrypoint — may need Traefik free retry)
+curl -fsS http://127.0.0.1/health || curl -fsS http://127.0.0.1:8000/health
+
+# 4. Prometheus scraping the gateway?
 curl -s "http://localhost:9090/api/v1/query?query=up" | jq .
 
-# 4. Tool router cache warm?
+# 5. Tool router cache warm?
 curl -fsS http://127.0.0.1:8000/v1/tools/cache
-```
-All `curl` commands should return HTTP 200. Prometheus `up{job="neuroswarm-gateway"}` should equal `1`.
 
-### 6. Send a real inference request
+# 6. Verify KleidiAI image is running (judge gate)
+docker compose ps --format 'table {{.Name}}\t{{.Image}}\t{{.Status}}' | grep -i kleidiai
+```
+
+All `curl` commands should return HTTP 200. Prometheus `up{job="neuroswarm-gateway"}` should equal `1`.  
+**Judge check:** `docker compose ps` must contain `llama-kleidiai`, not `ggml-org/llama.cpp`.
+
+### 8. Send real inference requests
 ```bash
+# Test 1: Cascade chat completion (CPU-CPU speculative decode)
 curl -s http://localhost:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -486,40 +587,81 @@ curl -s http://localhost:8000/v1/chat/completions \
     "max_tokens": 300,
     "stream": false
   }'
+
+# Test 2: Semantic MCP tool routing (Top-K schema injection)
+curl -fsS -H 'Content-Type: application/json' \
+  -d '{"query":"Search the web and summarize GitHub issues for the project"}' \
+  http://127.0.0.1:8000/tools/route
+
+# Test 3: Warmup chat to populate RMF counters (empty scrape = known failure mode)
+curl -fsS --max-time 180 -H 'Content-Type: application/json' \
+  -d '{"messages":[{"role":"user","content":"Warmup for metrics."}],"max_tokens":32,"temperature":0.1}' \
+  http://127.0.0.1:8000/v1/chat/completions
 ```
-You should receive a JSON response with `choices[0].message.content` generated by the CPU-CPU speculative cascade.
 
-### 7. View real-time dashboards
-Open Grafana at `http://<VM_EXTERNAL_IP>:3000`
-- **Username:** `admin`
-- **Password:** `OptimuzJudge2026` (or whatever you set in `GRAFANA_ADMIN_PASSWORD`)
+Expected: JSON responses with generated content, router confidence scores, and tier usage metadata.
 
-Navigate to **Home → Dashboards → OPTIMUZ → Optimuz Demo Dashboard**.
-
-Dashboards show live: tool cache hit rate, last tier used, router confidence, last request latency, tier-spec token throughput, speculative decode tokens, cascade tier distribution, MCP tool router inventory, and router latency breakdown — all backed by real Prometheus metrics from live traffic, not mocked data.
-
-### 8. Profile with Arm Performix (optional)
+### 9. Capture evidence & benchmarks
 ```bash
-# Install Performix CLI
+# Run the full evidence capture suite (health, readiness, metrics, chat, tool-routing, benchmarks)
+# This script is judge-facing — outputs go to benchmarks/results/ and docs/evidence/latest/
+bash scripts/capture-evidence.sh
+
+# Verify evidence was captured
+ls -la benchmarks/results/
+cat benchmarks/results/kleidiai-runtime-gate.txt
+cat benchmarks/results/run_all.json
+```
+
+The script automatically:
+
+- Scrapes `/metrics` with retry logic (prevents empty-scrape failure)
+- Runs `benchmarks/run_all.py` via `uv` or `python3`
+- Copies evidence to `docs/evidence/latest/` for judge visibility
+- Validates KleidiAI vs. stock image presence
+
+### 10. View real-time dashboards
+```bash
+# Get VM external IP (for browser access)
+curl -s ifconfig.me
+```
+
+Open Grafana at `http://<VM_EXTERNAL_IP>:3000`
+
+- **Username:** `admin`
+- **Password:** `OptimuzJudge2026` (or whatever you set in `.env`)
+
+Navigate to **Home → Dashboards → OPTIMUZ → Optimuz Demo Dashboard**
+
+Dashboards show live: tool cache hit rate, last tier used & cascade tier distribution, router confidence & latency breakdown, tier-spec token throughput & speculative decode tokens, and MCP tool router inventory — all backed by real Prometheus metrics from live traffic, not mocked data.
+
+### 11. Profile with Arm Performix (optional — judge evidence)
+```bash
+# Install Arm Performix CLI (apx) on the Axion host
 bash scripts/install-performix.sh
 
-# Prepare target
+# Prepare local target (0-arg only)
 apx target prepare
 
 # Find the speculative tier PID
 TIER_PID=$(pgrep -f "tier-spec" | head -n1)
 echo "Tier-spec PID: $TIER_PID"
 
-# Run Code Hotspots recipe
+# Run Code Hotspots recipe — captures real ARM64 performance evidence
+# including KleidiAI kernels, SVE2 execution paths, and thread scheduling
 apx recipe run code_hotspots --pid $TIER_PID --system-wide --timeout 60 --deploy-tools --json
 
 # Export results for verification
-apx run export $(apx run list --json | jq -r '.runs[-1].id') ./work/performix/ --json
+RUN_ID=$(apx run list --json | jq -r '.runs[-1].id')
+apx run export "$RUN_ID" ./work/performix/ --json
+
+# Install automated refresh cron (every 2 min) for live AROP loop
+(crontab -l 2>/dev/null; echo "*/2 * * * * cd $(pwd) && NSA_PERFORMIX_ALLOW_DEMO=0 bash scripts/refresh-performix-snapshot.sh >>work/performix/refresh.log 2>&1") | crontab -
 ```
-Attach/run Arm Performix against the speculative tier to capture real ARM64 performance evidence, including hot code paths, KleidiAI kernels, SVE2 execution paths, and thread scheduling.
+
+Attach/run Arm Performix against the speculative tier to capture real ARM64 flame graphs and performance evidence, including KleidiAI kernels, SVE2 execution paths, and thread scheduling.
 
 ---
-
 
 ## ⚖️ License
 
